@@ -50,10 +50,12 @@
 
     <!-- ─── 1. HERO ───────────────────────────────────────────── -->
     <section class="hero">
+      <div class="hero-bg" aria-hidden="true"></div>
+      <span class="hero-sheen" aria-hidden="true"></span>
       <div class="hero__copy">
         <p class="eyebrow reveal" data-delay="0">// Agente de atendimento · WhatsApp</p>
         <h1 class="hero__title reveal" data-delay="120">
-          Sua recepção atende<br />
+          Sua recepção <span class="hero__mobile-line">atende</span><br />
           <em>enquanto você dorme.</em>
         </h1>
         <p class="hero__sub reveal" data-delay="280">
@@ -72,12 +74,6 @@
           <li>Sem hora de almoço</li>
           <li>Sem feriado</li>
         </ul>
-      </div>
-      <div class="hero__visual reveal" data-delay="200">
-        <div class="orb">
-          <img src="image.png" alt="Símbolo Nova Iris" class="orb__img bg-knock" id="heroOrb" />
-        </div>
-        <p class="orb__caption">— Iris ·  v1.0</p>
       </div>
     </section>
 
@@ -295,41 +291,100 @@
     <section class="pricing" id="planos">
       <header class="section-head reveal">
         <span class="section-head__kicker">// 07 · Planos</span>
-        <h2 class="section-head__title">Um plano. <em>Sem letra miúda.</em></h2>
+        <h2 class="section-head__title">Atendimento e site, <em>sem letra miúda.</em></h2>
       </header>
 
-      <article class="plan reveal">
-        <header class="plan__head">
-          <h3 class="plan__name">Iris Clínica</h3>
-          <p class="plan__price">
-            <span class="plan__currency">R$</span>
-            <span class="plan__amount"><em>750</em></span>
-            <span class="plan__cycle">/mês</span>
-          </p>
-          <p class="plan__setup">+ R$ 1.000 de setup único · sem fidelidade</p>
-        </header>
+      <div class="pricing__grid">
+        <article class="plan reveal">
+          <header class="plan__head">
+            <h3 class="plan__name">Iris Clínica</h3>
+            <p class="plan__price">
+              <span class="plan__currency">R$</span>
+              <span class="plan__amount"><em>750</em></span>
+              <span class="plan__cycle">/mês</span>
+            </p>
+            <p class="plan__setup">+ R$ 1.000 de setup único · sem fidelidade</p>
+          </header>
 
-        <ul class="plan__list">
-          <li>Agente exclusivo treinado com o tom da sua clínica</li>
-          <li>Atendimento 24/7 no WhatsApp oficial</li>
-          <li>Integração com a sua agenda real</li>
-          <li>Confirmação automática de consultas</li>
-          <li>Lembretes inteligentes para reduzir no-show</li>
-          <li>Remarcações sem intervenção humana</li>
-          <li>Base de FAQ personalizada</li>
-          <li>Painel de acompanhamento e relatórios</li>
-          <li>Suporte humano contínuo</li>
-        </ul>
+          <ul class="plan__list">
+            <li>Agente exclusivo treinado com o tom da sua clínica</li>
+            <li>Atendimento 24/7 no WhatsApp oficial</li>
+            <li>Integração com a sua agenda real</li>
+            <li>Confirmação automática de consultas</li>
+            <li>Lembretes inteligentes para reduzir no-show</li>
+            <li>Remarcações sem intervenção humana</li>
+            <li>Base de FAQ personalizada</li>
+            <li>Acompanhamento dos ajustes no go-live</li>
+            <li>Suporte humano contínuo</li>
+          </ul>
 
-        <a class="btn btn--primary btn--block" href="https://wa.me/5511986272135?text=Oi%20Valentina%2C%20quero%20ver%20a%20Iris%20em%20a%C3%A7%C3%A3o." target="_blank" rel="noopener">
-          Quero a Iris na minha clínica
-        </a>
+          <a class="btn btn--primary btn--block" href="https://wa.me/5511986272135?text=Oi%20Valentina%2C%20quero%20ver%20a%20Iris%20em%20a%C3%A7%C3%A3o." target="_blank" rel="noopener">
+            Quero a Iris na minha clínica
+          </a>
 
-        <blockquote class="plan__pull">
-          <em>"Uma única consulta recuperada por mês já paga a Iris.<br />O resto é lucro."</em>
-        </blockquote>
-        <p class="plan__fine">// SEM FIDELIDADE · CANCELE QUANDO QUISER · GO-LIVE EM ATÉ 2 SEMANAS</p>
-      </article>
+          <p class="plan__fine">// SEM FIDELIDADE · CANCELE QUANDO QUISER · GO-LIVE EM ATÉ 2 SEMANAS</p>
+        </article>
+
+        <article class="plan reveal" data-delay="120">
+          <header class="plan__head">
+            <h3 class="plan__name">Site Inteligente</h3>
+            <p class="plan__note">Landing page ou site institucional para transformar visitas em conversas no WhatsApp.</p>
+            <p class="plan__price">
+              <span class="plan__currency">R$</span>
+              <span class="plan__amount"><em>2.500</em></span>
+              <span class="plan__cycle">setup</span>
+            </p>
+            <p class="plan__setup">+ R$ 250/mês de manutenção opcional</p>
+          </header>
+
+          <ul class="plan__list">
+            <li>Landing page ou site institucional enxuto</li>
+            <li>Copy, layout e estrutura de conversão</li>
+            <li>Botões para WhatsApp e agendamento</li>
+            <li>Versão mobile bem acabada</li>
+            <li>SEO básico para presença local</li>
+            <li>Ajustes finais depois da publicação</li>
+          </ul>
+
+          <a class="btn btn--ghost btn--block" href="https://wa.me/5511986272135?text=Oi%20Valentina%2C%20quero%20um%20site%20para%20minha%20cl%C3%ADnica." target="_blank" rel="noopener">
+            Quero um site para a clínica
+          </a>
+
+          <p class="plan__fine">// SITE INSTITUCIONAL COMPLETO SOB ESCOPO</p>
+        </article>
+
+        <article class="plan plan--featured reveal" data-delay="240">
+          <span class="plan__tag">Melhor pacote</span>
+          <header class="plan__head">
+            <h3 class="plan__name">Iris + Site</h3>
+            <p class="plan__note">A presença digital e o atendimento já nascem conectados no mesmo projeto.</p>
+            <p class="plan__price">
+              <span class="plan__currency">R$</span>
+              <span class="plan__amount"><em>1.250</em></span>
+              <span class="plan__cycle">/mês</span>
+            </p>
+            <p class="plan__setup">+ R$ 2.500 de setup único · implantação conjunta</p>
+          </header>
+
+          <ul class="plan__list">
+            <li>Iris Clínica completa</li>
+            <li>Landing page ou site institucional inicial</li>
+            <li>Fluxo de captação conectado ao WhatsApp</li>
+            <li>Mensagem, agenda e CTA alinhados</li>
+            <li>Go-live coordenado em uma implantação</li>
+            <li>Suporte humano contínuo</li>
+          </ul>
+
+          <a class="btn btn--primary btn--block" href="https://wa.me/5511986272135?text=Oi%20Valentina%2C%20quero%20o%20pacote%20Iris%20%2B%20Site%20para%20minha%20cl%C3%ADnica." target="_blank" rel="noopener">
+            Quero Iris + Site
+          </a>
+
+          <blockquote class="plan__pull">
+            <em>"A clínica aparece melhor, responde mais rápido e perde menos oportunidades no caminho."</em>
+          </blockquote>
+          <p class="plan__fine">// RECOMENDADO PARA CLÍNICAS SEM SITE FORTE OU COM SITE PARADO</p>
+        </article>
+      </div>
     </section>
 
     <!-- ─── 9. VISÃO DE PLATAFORMA ────────────────────────────── -->
@@ -339,7 +394,7 @@
         <h2 class="section-head__title">A Iris é <em>só o começo</em>.</h2>
       </header>
       <p class="vision__lead reveal">
-        A Iris é o primeiro produto de uma plataforma de automação para clínicas.
+        A Iris abre uma plataforma de automação e presença digital para clínicas.
       </p>
       <ul class="vision__cards">
         <li class="vision__card vision__card--live reveal">
@@ -348,17 +403,17 @@
           <p>Agente de atendimento no WhatsApp.</p>
           <span class="vision__status">Ao vivo</span>
         </li>
-        <li class="vision__card vision__card--soon reveal" data-delay="80">
-          <span class="dot dot--soon" aria-hidden="true"></span>
-          <h3>Dashboard Financeiro</h3>
-          <p>Receitas, despesas, inadimplência e projeções.</p>
-          <span class="vision__status">Em validação</span>
-        </li>
-        <li class="vision__card vision__card--next reveal" data-delay="160">
-          <span class="dot dot--next" aria-hidden="true"></span>
+        <li class="vision__card vision__card--live reveal" data-delay="80">
+          <span class="dot dot--live" aria-hidden="true"></span>
           <h3>Sites Inteligentes</h3>
-          <p>Site institucional com agendamento integrado.</p>
-          <span class="vision__status">Roadmap</span>
+          <p>Landing pages e sites institucionais com agendamento integrado.</p>
+          <span class="vision__status">Ao vivo</span>
+        </li>
+        <li class="vision__card vision__card--soon reveal" data-delay="160">
+          <span class="dot dot--soon" aria-hidden="true"></span>
+          <h3>Fluxo de caixa</h3>
+          <p>Receitas, despesas, inadimplência e projeções financeiras.</p>
+          <span class="vision__status">Próximo módulo</span>
         </li>
       </ul>
     </section>

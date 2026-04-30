@@ -51,6 +51,36 @@
 
     if (reduceMotion) return;
 
+    gsap.defaults({ overwrite: 'auto' });
+    ScrollTrigger.config({ ignoreMobileResize: true });
+    const isMobile = window.matchMedia('(max-width: 640px)').matches;
+
+    /* Visual system: progress + section guide lines */
+    const progress = document.createElement('span');
+    progress.className = 'scroll-progress';
+    progress.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(progress);
+
+    gsap.to(progress, {
+      scaleX: 1,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: document.documentElement,
+        start: 'top top',
+        end: 'bottom bottom',
+        scrub: 0.2
+      }
+    });
+
+    gsap.utils.toArray('.section-head').forEach(head => {
+      ScrollTrigger.create({
+        trigger: head,
+        start: 'top 82%',
+        once: true,
+        onEnter: () => head.classList.add('is-lit')
+      });
+    });
+
     /* ── 1. INTRO sequence (hero) ────────────────────── */
     // Mark hero reveals as "in" first so CSS opacity:0 doesn't fight GSAP
     document.querySelectorAll('.hero .reveal').forEach(el => el.classList.add('is-in'));
@@ -63,29 +93,22 @@
       .fromTo('.hero__sub',     { y: 24,  opacity: 0 }, { y: 0, opacity: 1, duration: 0.9 }, 0.45)
       .fromTo('.hero__ctas .btn',  { y: 18, opacity: 0 }, { y: 0, opacity: 1, duration: 0.7, stagger: 0.08 }, 0.6)
       .fromTo('.hero__trust li',   { y: 12, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6, stagger: 0.06 }, 0.8)
-      .fromTo('#heroOrb',     { scale: 0.85, opacity: 0 }, { scale: 1, opacity: 1, duration: 1.6, ease: 'power4.out' }, 0.1)
-      .fromTo('.orb__caption',{ opacity: 0 }, { opacity: 1, duration: 0.6 }, 1.0);
+      .fromTo('.hero-bg', { scale: 1.05, opacity: 0 }, { scale: 1.02, opacity: 0.88, duration: 1.8, ease: 'power4.out' }, 0);
 
-    /* ── 2. Hero orb idle: float + rotate ──────────── */
-    const heroOrb = document.getElementById('heroOrb');
-    if (heroOrb) {
-      gsap.to(heroOrb, {
-        y: '+=18',
-        duration: 3.4,
-        ease: 'sine.inOut',
-        yoyo: true,
-        repeat: -1
-      });
-      gsap.to(heroOrb, {
-        rotation: 6,
-        duration: 7,
-        ease: 'sine.inOut',
-        yoyo: true,
-        repeat: -1
-      });
+    gsap.timeline({ repeat: -1, repeatDelay: 2.8, defaults: { ease: 'power2.inOut' } })
+      .fromTo('.hero-sheen',
+        { backgroundPosition: '140% 0', opacity: 0 },
+        { backgroundPosition: '-40% 0', opacity: 1, duration: 2.1 },
+        1.1
+      )
+      .to('.hero-sheen', { opacity: 0, duration: 0.5 }, '>-0.45');
+
+    /* ── 2. Hero background parallax ──────────── */
+    const heroBg = document.querySelector('.hero-bg');
+    if (heroBg) {
       // scroll parallax
-      gsap.to(heroOrb, {
-        yPercent: -30,
+      gsap.to(heroBg, {
+        yPercent: -8,
         ease: 'none',
         scrollTrigger: {
           trigger: '.hero',
@@ -191,9 +214,9 @@
     const problemItems = gsap.utils.toArray('.problem__list li');
     if (problemItems.length) {
       gsap.fromTo(problemItems,
-        { opacity: 0, x: 40 },
+        { opacity: 0, x: isMobile ? 0 : 40, y: isMobile ? 26 : 0 },
         {
-          opacity: 1, x: 0,
+          opacity: 1, x: 0, y: 0,
           duration: 0.9,
           stagger: 0.12,
           ease: 'power3.out',
@@ -214,15 +237,43 @@
           scrollTrigger: { trigger: '.demo', start: 'top 70%', once: true }
         }
       );
+
+      gsap.to(phone, {
+        y: -10,
+        rotateZ: 0.7,
+        duration: 3.8,
+        ease: 'sine.inOut',
+        yoyo: true,
+        repeat: -1,
+        delay: 1.6
+      });
+
+      const phoneFrame = document.querySelector('.demo__phone');
+      if (phoneFrame && window.matchMedia('(pointer: fine)').matches) {
+        phoneFrame.addEventListener('mousemove', event => {
+          const rect = phoneFrame.getBoundingClientRect();
+          const x = (event.clientX - rect.left) / rect.width - 0.5;
+          const y = (event.clientY - rect.top) / rect.height - 0.5;
+          gsap.to(phone, {
+            rotateY: x * 10,
+            rotateX: y * -8,
+            duration: 0.45,
+            ease: 'power3.out'
+          });
+        });
+        phoneFrame.addEventListener('mouseleave', () => {
+          gsap.to(phone, { rotateY: 0, rotateX: 0, duration: 0.8, ease: 'power3.out' });
+        });
+      }
     }
 
     /* ── 8. Demo callouts — slide from right ──────── */
     const callouts = gsap.utils.toArray('.demo__callouts li');
     if (callouts.length) {
       gsap.fromTo(callouts,
-        { opacity: 0, x: 60 },
+        { opacity: 0, x: isMobile ? 0 : 60, y: isMobile ? 26 : 0 },
         {
-          opacity: 1, x: 0,
+          opacity: 1, x: 0, y: 0,
           duration: 0.9,
           stagger: 0.14,
           ease: 'power3.out',
@@ -247,15 +298,61 @@
     }
 
     /* ── 10. Stats — scale-in ─────────────────────── */
+    const statCards = gsap.utils.toArray('.stat');
     const statNums = gsap.utils.toArray('.stat__num');
-    if (statNums.length) {
-      gsap.fromTo(statNums,
-        { opacity: 0, y: 50, scale: 0.9 },
+    if (statCards.length) {
+      gsap.fromTo(statCards,
+        { opacity: 0, y: 46, scale: 0.96 },
         {
           opacity: 1, y: 0, scale: 1,
-          duration: 1.2,
+          duration: 1.05,
           stagger: 0.12,
           ease: 'power4.out',
+          scrollTrigger: {
+            trigger: '.stats',
+            start: 'top 70%',
+            once: true,
+            onEnter: () => statCards.forEach((card, index) => {
+              setTimeout(() => card.classList.add('is-hot'), index * 120);
+            })
+          }
+        }
+      );
+    }
+
+    const counterSpecs = [
+      { el: document.querySelector('.stat--a .stat__num em'), from: 0, to: 24, format: v => `${Math.round(v)}/7` },
+      { el: document.querySelector('.stat--b .stat__num em'), from: 0, to: 3, format: v => `<${Math.round(v)}s` },
+      { el: document.querySelector('.stat--c .stat__num em'), from: 9, to: 0, format: v => `${Math.round(v)}` }
+    ].filter(item => item.el);
+
+    counterSpecs.forEach(spec => {
+      const proxy = { value: spec.from };
+      ScrollTrigger.create({
+        trigger: spec.el.closest('.stats'),
+        start: 'top 70%',
+        once: true,
+        onEnter: () => {
+          gsap.to(proxy, {
+            value: spec.to,
+            duration: 1.25,
+            ease: 'power3.out',
+            onUpdate: () => { spec.el.textContent = spec.format(proxy.value); }
+          });
+        }
+      });
+    });
+
+    if (statNums.length) {
+      gsap.fromTo(statNums,
+        { textShadow: '0 0 0 rgba(111,227,168,0)' },
+        {
+          textShadow: '0 0 28px rgba(111,227,168,0.28)',
+          duration: 1.6,
+          stagger: 0.12,
+          yoyo: true,
+          repeat: 1,
+          ease: 'sine.inOut',
           scrollTrigger: { trigger: '.stats', start: 'top 70%', once: true }
         }
       );
@@ -265,39 +362,63 @@
     const versusRows = gsap.utils.toArray('.versus__table tbody tr');
     if (versusRows.length) {
       gsap.fromTo(versusRows,
-        { opacity: 0, x: -20 },
+        { opacity: 0, x: isMobile ? 0 : -20, y: isMobile ? 18 : 0 },
         {
-          opacity: 1, x: 0,
+          opacity: 1, x: 0, y: 0,
           duration: 0.7,
           stagger: 0.08,
           ease: 'power2.out',
           scrollTrigger: { trigger: '.versus', start: 'top 70%', once: true }
         }
       );
+
+      gsap.fromTo('.versus__table .is-iris',
+        { boxShadow: '0 0 0 rgba(111,227,168,0)' },
+        {
+          boxShadow: '0 0 34px rgba(111,227,168,0.14) inset',
+          duration: 1.4,
+          ease: 'sine.inOut',
+          yoyo: true,
+          repeat: 1,
+          scrollTrigger: { trigger: '.versus', start: 'top 70%', once: true }
+        }
+      );
     }
 
     /* ── 12. Plan card — dramatic entry ───────────── */
-    const plan = document.querySelector('.plan');
-    if (plan) {
-      gsap.fromTo(plan,
+    const planCards = gsap.utils.toArray('.plan');
+    if (planCards.length) {
+      gsap.fromTo(planCards,
         { opacity: 0, y: 60, scale: 0.96 },
         {
           opacity: 1, y: 0, scale: 1,
           duration: 1.3,
+          stagger: 0.12,
           ease: 'power4.out',
-          scrollTrigger: { trigger: plan, start: 'top 80%', once: true }
+          scrollTrigger: {
+            trigger: '.pricing__grid',
+            start: 'top 80%',
+            once: true,
+            onEnter: () => planCards.forEach((card, index) => {
+              setTimeout(() => card.classList.add('is-sweeping'), index * 160);
+            })
+          }
         }
       );
-      gsap.fromTo('.plan__list li',
-        { opacity: 0, x: -16 },
-        {
-          opacity: 1, x: 0,
-          duration: 0.5,
-          stagger: 0.05,
-          ease: 'power2.out',
-          scrollTrigger: { trigger: '.plan__list', start: 'top 80%', once: true }
-        }
-      );
+
+      planCards.forEach(card => {
+        const items = card.querySelectorAll('.plan__list li');
+        gsap.fromTo(items,
+          { opacity: 0, x: isMobile ? 0 : -16, y: isMobile ? 12 : 0 },
+          {
+            opacity: 1, x: 0, y: 0,
+            duration: 0.5,
+            stagger: 0.045,
+            ease: 'power2.out',
+            scrollTrigger: { trigger: card, start: 'top 76%', once: true }
+          }
+        );
+      });
     }
 
     /* ── 13. Vision cards — stagger up ────────────── */
@@ -310,9 +431,26 @@
           duration: 0.9,
           stagger: 0.12,
           ease: 'power3.out',
-          scrollTrigger: { trigger: '.vision__cards', start: 'top 80%', once: true }
+          scrollTrigger: {
+            trigger: '.vision__cards',
+            start: 'top 80%',
+            once: true,
+            onEnter: () => visionCards.forEach((card, index) => {
+              setTimeout(() => card.classList.add('is-lit'), index * 120);
+            })
+          }
         }
       );
+
+      gsap.to('.vision__card .dot', {
+        scale: 1.35,
+        opacity: 0.72,
+        duration: 1.1,
+        ease: 'sine.inOut',
+        yoyo: true,
+        repeat: -1,
+        stagger: 0.18
+      });
     }
 
     /* ── 14. FAQ items — soft reveal ─────────────── */
@@ -328,6 +466,19 @@
           scrollTrigger: { trigger: '.faq__list', start: 'top 80%', once: true }
         }
       );
+
+      faqItems.forEach(item => {
+        item.addEventListener('toggle', () => {
+          const body = item.querySelector('p');
+          if (!body) return;
+          if (item.open) {
+            gsap.fromTo(body,
+              { opacity: 0, y: -8 },
+              { opacity: 1, y: 0, duration: 0.35, ease: 'power2.out' }
+            );
+          }
+        });
+      });
     }
 
     /* ── 15. Closer — orb breathing + reveal ──────── */
@@ -358,14 +509,56 @@
     gsap.to('.aurora__b', { x: '+=80', y: '+=40', duration: 22, ease: 'sine.inOut', yoyo: true, repeat: -1 });
 
     /* ── 17. CTA hover micro ──────────────────────── */
-    document.querySelectorAll('.btn--primary').forEach(btn => {
-      btn.addEventListener('mouseenter', () => {
-        gsap.to(btn, { scale: 1.03, duration: 0.3, ease: 'power2.out' });
+    const finePointer = window.matchMedia('(pointer: fine)').matches;
+
+    if (finePointer) {
+      document.querySelectorAll('.plan, .vision__card').forEach(card => {
+        card.addEventListener('mousemove', event => {
+          const rect = card.getBoundingClientRect();
+          const x = ((event.clientX - rect.left) / rect.width) * 100;
+          const y = ((event.clientY - rect.top) / rect.height) * 100;
+          card.style.setProperty('--spot-x', `${x}%`);
+          card.style.setProperty('--spot-y', `${y}%`);
+          gsap.to(card, {
+            y: -5,
+            borderColor: 'rgba(111,227,168,0.32)',
+            duration: 0.35,
+            ease: 'power3.out'
+          });
+        });
+        card.addEventListener('mouseleave', () => {
+          card.style.setProperty('--spot-x', '82%');
+          card.style.setProperty('--spot-y', '10%');
+          gsap.to(card, {
+            y: 0,
+            borderColor: '',
+            duration: 0.55,
+            ease: 'power3.out'
+          });
+        });
       });
-      btn.addEventListener('mouseleave', () => {
-        gsap.to(btn, { scale: 1, duration: 0.4, ease: 'power3.out' });
+
+      document.querySelectorAll('.btn').forEach(btn => {
+        btn.addEventListener('mousemove', event => {
+          const rect = btn.getBoundingClientRect();
+          const x = event.clientX - rect.left - rect.width / 2;
+          const y = event.clientY - rect.top - rect.height / 2;
+          gsap.to(btn, { x: x * 0.08, y: y * 0.18, scale: 1.025, duration: 0.25, ease: 'power2.out' });
+        });
+        btn.addEventListener('mouseleave', () => {
+          gsap.to(btn, { x: 0, y: 0, scale: 1, duration: 0.45, ease: 'elastic.out(1, 0.45)' });
+        });
       });
-    });
+    } else {
+      document.querySelectorAll('.btn--primary').forEach(btn => {
+        btn.addEventListener('mouseenter', () => {
+          gsap.to(btn, { scale: 1.03, duration: 0.3, ease: 'power2.out' });
+        });
+        btn.addEventListener('mouseleave', () => {
+          gsap.to(btn, { scale: 1, duration: 0.4, ease: 'power3.out' });
+        });
+      });
+    }
 
     /* ── refresh ScrollTrigger on font load ───────── */
     if (document.fonts && document.fonts.ready) {
