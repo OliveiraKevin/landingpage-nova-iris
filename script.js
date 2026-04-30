@@ -4,8 +4,6 @@
 (() => {
   'use strict';
 
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
   /* ── nav scroll background ───────────────────────────── */
   const nav = document.getElementById('nav');
   const onScrollNav = () => {
@@ -15,26 +13,10 @@
   document.addEventListener('scroll', onScrollNav, { passive: true });
   onScrollNav();
 
-  /* ── reveal preset ───────────────────────────────────── */
   const revealEls = document.querySelectorAll('.reveal');
-  revealEls.forEach(el => {
-    const d = el.getAttribute('data-delay');
-    if (d) el.style.setProperty('--delay', `${d}ms`);
-  });
 
-  if (reduceMotion) {
-    revealEls.forEach(el => el.classList.add('is-in'));
-  }
-
-  /* ── wait for GSAP (deferred) then animate ───────────── */
-  const waitForGSAP = (cb, tries = 50) => {
-    if (window.gsap && window.ScrollTrigger) return cb();
-    if (tries <= 0) return fallbackReveal();
-    setTimeout(() => waitForGSAP(cb, tries - 1), 60);
-  };
-
+  /* ── fallback caso GSAP não carregue ─────────────────── */
   const fallbackReveal = () => {
-    if (reduceMotion) return;
     const io = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -46,16 +28,19 @@
     revealEls.forEach(el => io.observe(el));
   };
 
+  /* ── espera GSAP carregar ────────────────────────────── */
+  const waitForGSAP = (cb, tries = 100) => {
+    if (window.gsap && window.ScrollTrigger) return cb();
+    if (tries <= 0) return fallbackReveal();
+    setTimeout(() => waitForGSAP(cb, tries - 1), 20);
+  };
+
   const animate = () => {
     gsap.registerPlugin(ScrollTrigger);
-
-    if (reduceMotion) return;
-
-    gsap.defaults({ overwrite: 'auto' });
+    gsap.defaults({ overwrite: 'auto', force3D: true });
     ScrollTrigger.config({ ignoreMobileResize: true });
-    const isMobile = window.matchMedia('(max-width: 640px)').matches;
 
-    /* Visual system: progress + section guide lines */
+    /* ── progress bar ────────────────────────────────── */
     const progress = document.createElement('span');
     progress.className = 'scroll-progress';
     progress.setAttribute('aria-hidden', 'true');
@@ -72,29 +57,20 @@
       }
     });
 
-    gsap.utils.toArray('.section-head').forEach(head => {
-      ScrollTrigger.create({
-        trigger: head,
-        start: 'top 82%',
-        once: true,
-        onEnter: () => head.classList.add('is-lit')
-      });
-    });
-
-    /* ── 1. INTRO sequence (hero) ────────────────────── */
-    // Mark hero reveals as "in" first so CSS opacity:0 doesn't fight GSAP
+    /* ── HERO: stagger inicial dedicado ───────────────── */
     document.querySelectorAll('.hero .reveal').forEach(el => el.classList.add('is-in'));
 
     const intro = gsap.timeline({ defaults: { ease: 'power3.out' } });
     intro
-      .fromTo('.nav',           { y: -24, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8 }, 0)
-      .fromTo('.hero .eyebrow', { y: 20,  opacity: 0 }, { y: 0, opacity: 1, duration: 0.8 }, 0.1)
-      .fromTo('.hero__title',   { y: 40,  opacity: 0 }, { y: 0, opacity: 1, duration: 1.0 }, 0.2)
-      .fromTo('.hero__sub',     { y: 24,  opacity: 0 }, { y: 0, opacity: 1, duration: 0.9 }, 0.45)
-      .fromTo('.hero__ctas .btn',  { y: 18, opacity: 0 }, { y: 0, opacity: 1, duration: 0.7, stagger: 0.08 }, 0.6)
-      .fromTo('.hero__trust li',   { y: 12, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6, stagger: 0.06 }, 0.8)
+      .fromTo('.nav',              { y: -24, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8 }, 0)
+      .fromTo('.hero .eyebrow',    { y: 20,  opacity: 0 }, { y: 0, opacity: 1, duration: 0.8 }, 0.1)
+      .fromTo('.hero__title',      { y: 40,  opacity: 0 }, { y: 0, opacity: 1, duration: 1.0 }, 0.2)
+      .fromTo('.hero__sub',        { y: 24,  opacity: 0 }, { y: 0, opacity: 1, duration: 0.9 }, 0.45)
+      .fromTo('.hero__ctas .btn',  { y: 18,  opacity: 0 }, { y: 0, opacity: 1, duration: 0.7, stagger: 0.08 }, 0.6)
+      .fromTo('.hero__trust li',   { y: 12,  opacity: 0 }, { y: 0, opacity: 1, duration: 0.6, stagger: 0.06 }, 0.8)
       .fromTo('.hero-bg', { scale: 1.05, opacity: 0 }, { scale: 1.02, opacity: 0.88, duration: 1.8, ease: 'power4.out' }, 0);
 
+    /* ── HERO sheen loop ─────────────────────────────── */
     gsap.timeline({ repeat: -1, repeatDelay: 2.8, defaults: { ease: 'power2.inOut' } })
       .fromTo('.hero-sheen',
         { backgroundPosition: '140% 0', opacity: 0 },
@@ -103,10 +79,9 @@
       )
       .to('.hero-sheen', { opacity: 0, duration: 0.5 }, '>-0.45');
 
-    /* ── 2. Hero background parallax ──────────── */
+    /* ── HERO bg parallax ────────────────────────────── */
     const heroBg = document.querySelector('.hero-bg');
     if (heroBg) {
-      // scroll parallax
       gsap.to(heroBg, {
         yPercent: -8,
         ease: 'none',
@@ -119,80 +94,43 @@
       });
     }
 
-    /* ── 3. Generic reveals — more dramatic ─────────── */
-    revealEls.forEach(el => {
-      if (el.closest('.hero')) return;
-      const delay = parseFloat(el.getAttribute('data-delay') || 0) / 1000;
-      gsap.fromTo(el,
-        { opacity: 0, y: 60, filter: 'blur(8px)' },
-        {
-          opacity: 1, y: 0, filter: 'blur(0px)',
-          duration: 1.2,
-          delay,
-          ease: 'power3.out',
-          scrollTrigger: { trigger: el, start: 'top 90%', once: true },
-          onStart: () => el.classList.add('is-in')
-        }
-      );
+    /* ══════════════════════════════════════════════════
+       REVEAL — única fonte de verdade para todos os
+       elementos com .reveal fora do hero. Usa batch para
+       agrupar elementos que entram juntos no viewport.
+       ══════════════════════════════════════════════════ */
+    const nonHeroReveals = Array.from(revealEls).filter(el => !el.closest('.hero'));
+
+    ScrollTrigger.batch(nonHeroReveals, {
+      interval: 0.1,
+      batchMax: 5,
+      onEnter: batch => {
+        gsap.fromTo(batch,
+          { opacity: 0, y: 32 },
+          {
+            opacity: 1, y: 0,
+            duration: 0.9,
+            stagger: 0.12,
+            ease: 'power3.out',
+            onComplete: () => batch.forEach(el => el.classList.add('is-in'))
+          }
+        );
+      },
+      start: 'top 86%',
+      once: true
     });
 
-    /* ── 4. Section heads — bigger entry ──────────── */
-    gsap.utils.toArray('.section-head__title').forEach(t => {
-      gsap.fromTo(t,
-        { opacity: 0, y: 60, scale: 0.96, filter: 'blur(10px)' },
-        {
-          opacity: 1, y: 0, scale: 1, filter: 'blur(0px)',
-          duration: 1.4,
-          ease: 'power4.out',
-          scrollTrigger: { trigger: t, start: 'top 85%', once: true }
-        }
-      );
+    /* ── linha decorativa nos section heads ──────────── */
+    gsap.utils.toArray('.section-head').forEach(head => {
+      ScrollTrigger.create({
+        trigger: head,
+        start: 'top 82%',
+        once: true,
+        onEnter: () => head.classList.add('is-lit')
+      });
     });
 
-    /* ── 4b. Section kickers — slide in ──────────── */
-    gsap.utils.toArray('.section-head__kicker').forEach(k => {
-      gsap.fromTo(k,
-        { opacity: 0, x: -20 },
-        {
-          opacity: 1, x: 0,
-          duration: 0.9,
-          ease: 'power3.out',
-          scrollTrigger: { trigger: k, start: 'top 90%', once: true }
-        }
-      );
-    });
-
-    /* ── 4c. Auto-reveal anything not yet animated ─ */
-    const autoTargets = gsap.utils.toArray([
-      '.problem__lead',
-      '.solution__text',
-      '.solution__caps',
-      '.demo__phone',
-      '.plan__head',
-      '.plan__price',
-      '.plan__setup',
-      '.plan__pull',
-      '.plan__fine',
-      '.vision__lead',
-      '.closer__sub',
-      '.closer__sign',
-      '.foot__brand',
-      '.foot__links',
-      '.foot__copy'
-    ]);
-    autoTargets.forEach(el => {
-      gsap.fromTo(el,
-        { opacity: 0, y: 40 },
-        {
-          opacity: 1, y: 0,
-          duration: 1.0,
-          ease: 'power3.out',
-          scrollTrigger: { trigger: el, start: 'top 88%', once: true }
-        }
-      );
-    });
-
-    /* ── 5. Solution orb — drift on scroll ────────── */
+    /* ── solution orb: drift contínuo no scroll ──────── */
     const solOrb = document.querySelector('.solution__orb');
     if (solOrb) {
       gsap.fromTo(solOrb,
@@ -210,34 +148,10 @@
       );
     }
 
-    /* ── 6. Problem list — staggered slide ────────── */
-    const problemItems = gsap.utils.toArray('.problem__list li');
-    if (problemItems.length) {
-      gsap.fromTo(problemItems,
-        { opacity: 0, x: isMobile ? 0 : 40, y: isMobile ? 26 : 0 },
-        {
-          opacity: 1, x: 0, y: 0,
-          duration: 0.9,
-          stagger: 0.12,
-          ease: 'power3.out',
-          scrollTrigger: { trigger: '.problem', start: 'top 70%', once: true }
-        }
-      );
-    }
-
-    /* ── 7. Phone — tilt + scale on scroll ────────── */
+    /* ── phone: float idle + tilt no mouse ───────────── */
     const phone = document.querySelector('.phone');
+    const phoneFrame = document.querySelector('.demo__phone');
     if (phone) {
-      gsap.fromTo(phone,
-        { y: 80, opacity: 0, rotateY: -12, rotateX: 6 },
-        {
-          y: 0, opacity: 1, rotateY: 0, rotateX: 0,
-          duration: 1.4,
-          ease: 'power4.out',
-          scrollTrigger: { trigger: '.demo', start: 'top 70%', once: true }
-        }
-      );
-
       gsap.to(phone, {
         y: -10,
         rotateZ: 0.7,
@@ -248,7 +162,6 @@
         delay: 1.6
       });
 
-      const phoneFrame = document.querySelector('.demo__phone');
       if (phoneFrame && window.matchMedia('(pointer: fine)').matches) {
         phoneFrame.addEventListener('mousemove', event => {
           const rect = phoneFrame.getBoundingClientRect();
@@ -267,63 +180,11 @@
       }
     }
 
-    /* ── 8. Demo callouts — slide from right ──────── */
-    const callouts = gsap.utils.toArray('.demo__callouts li');
-    if (callouts.length) {
-      gsap.fromTo(callouts,
-        { opacity: 0, x: isMobile ? 0 : 60, y: isMobile ? 26 : 0 },
-        {
-          opacity: 1, x: 0, y: 0,
-          duration: 0.9,
-          stagger: 0.14,
-          ease: 'power3.out',
-          scrollTrigger: { trigger: '.demo', start: 'top 60%', once: true }
-        }
-      );
-    }
-
-    /* ── 9. How steps — stagger ───────────────────── */
-    const howSteps = gsap.utils.toArray('.how__step');
-    if (howSteps.length) {
-      gsap.fromTo(howSteps,
-        { opacity: 0, y: 40 },
-        {
-          opacity: 1, y: 0,
-          duration: 0.95,
-          stagger: 0.1,
-          ease: 'power3.out',
-          scrollTrigger: { trigger: '.how', start: 'top 70%', once: true }
-        }
-      );
-    }
-
-    /* ── 10. Stats — scale-in ─────────────────────── */
-    const statCards = gsap.utils.toArray('.stat');
-    const statNums = gsap.utils.toArray('.stat__num');
-    if (statCards.length) {
-      gsap.fromTo(statCards,
-        { opacity: 0, y: 46, scale: 0.96 },
-        {
-          opacity: 1, y: 0, scale: 1,
-          duration: 1.05,
-          stagger: 0.12,
-          ease: 'power4.out',
-          scrollTrigger: {
-            trigger: '.stats',
-            start: 'top 70%',
-            once: true,
-            onEnter: () => statCards.forEach((card, index) => {
-              setTimeout(() => card.classList.add('is-hot'), index * 120);
-            })
-          }
-        }
-      );
-    }
-
+    /* ── stats: counters + glow class ────────────────── */
     const counterSpecs = [
       { el: document.querySelector('.stat--a .stat__num em'), from: 0, to: 24, format: v => `${Math.round(v)}/7` },
-      { el: document.querySelector('.stat--b .stat__num em'), from: 0, to: 3, format: v => `<${Math.round(v)}s` },
-      { el: document.querySelector('.stat--c .stat__num em'), from: 9, to: 0, format: v => `${Math.round(v)}` }
+      { el: document.querySelector('.stat--b .stat__num em'), from: 0, to: 3,  format: v => `<${Math.round(v)}s` },
+      { el: document.querySelector('.stat--c .stat__num em'), from: 9, to: 0,  format: v => `${Math.round(v)}` }
     ].filter(item => item.el);
 
     counterSpecs.forEach(spec => {
@@ -343,175 +204,104 @@
       });
     });
 
-    if (statNums.length) {
-      gsap.fromTo(statNums,
-        { textShadow: '0 0 0 rgba(111,227,168,0)' },
-        {
-          textShadow: '0 0 28px rgba(111,227,168,0.28)',
-          duration: 1.6,
-          stagger: 0.12,
-          yoyo: true,
-          repeat: 1,
-          ease: 'sine.inOut',
-          scrollTrigger: { trigger: '.stats', start: 'top 70%', once: true }
-        }
-      );
-    }
-
-    /* ── 11. Versus rows — line by line ───────────── */
-    const versusRows = gsap.utils.toArray('.versus__table tbody tr');
-    if (versusRows.length) {
-      gsap.fromTo(versusRows,
-        { opacity: 0, x: isMobile ? 0 : -20, y: isMobile ? 18 : 0 },
-        {
-          opacity: 1, x: 0, y: 0,
-          duration: 0.7,
-          stagger: 0.08,
-          ease: 'power2.out',
-          scrollTrigger: { trigger: '.versus', start: 'top 70%', once: true }
-        }
-      );
-
-      gsap.fromTo('.versus__table .is-iris',
-        { boxShadow: '0 0 0 rgba(111,227,168,0)' },
-        {
-          boxShadow: '0 0 34px rgba(111,227,168,0.14) inset',
-          duration: 1.4,
-          ease: 'sine.inOut',
-          yoyo: true,
-          repeat: 1,
-          scrollTrigger: { trigger: '.versus', start: 'top 70%', once: true }
-        }
-      );
-    }
-
-    /* ── 12. Plan card — dramatic entry ───────────── */
-    const planCards = gsap.utils.toArray('.plan');
-    if (planCards.length) {
-      gsap.fromTo(planCards,
-        { opacity: 0, y: 60, scale: 0.96 },
-        {
-          opacity: 1, y: 0, scale: 1,
-          duration: 1.3,
-          stagger: 0.12,
-          ease: 'power4.out',
-          scrollTrigger: {
-            trigger: '.pricing__grid',
-            start: 'top 80%',
-            once: true,
-            onEnter: () => planCards.forEach((card, index) => {
-              setTimeout(() => card.classList.add('is-sweeping'), index * 160);
-            })
-          }
-        }
-      );
-
-      planCards.forEach(card => {
-        const items = card.querySelectorAll('.plan__list li');
-        gsap.fromTo(items,
-          { opacity: 0, x: isMobile ? 0 : -16, y: isMobile ? 12 : 0 },
-          {
-            opacity: 1, x: 0, y: 0,
-            duration: 0.5,
-            stagger: 0.045,
-            ease: 'power2.out',
-            scrollTrigger: { trigger: card, start: 'top 76%', once: true }
-          }
-        );
+    const statCards = gsap.utils.toArray('.stat');
+    if (statCards.length) {
+      ScrollTrigger.create({
+        trigger: '.stats',
+        start: 'top 70%',
+        once: true,
+        onEnter: () => statCards.forEach((card, index) => {
+          setTimeout(() => card.classList.add('is-hot'), index * 120);
+        })
       });
     }
 
-    /* ── 13. Vision cards — stagger up ────────────── */
-    const visionCards = gsap.utils.toArray('.vision__card');
-    if (visionCards.length) {
-      gsap.fromTo(visionCards,
-        { opacity: 0, y: 30 },
-        {
-          opacity: 1, y: 0,
-          duration: 0.9,
-          stagger: 0.12,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: '.vision__cards',
-            start: 'top 80%',
-            once: true,
-            onEnter: () => visionCards.forEach((card, index) => {
-              setTimeout(() => card.classList.add('is-lit'), index * 120);
-            })
-          }
-        }
-      );
-
-      gsap.to('.vision__card .dot', {
-        scale: 1.35,
-        opacity: 0.72,
-        duration: 1.1,
+    /* ── versus: glow nas células iris ───────────────── */
+    gsap.fromTo('.versus__table .is-iris',
+      { boxShadow: '0 0 0 rgba(111,227,168,0)' },
+      {
+        boxShadow: '0 0 34px rgba(111,227,168,0.14) inset',
+        duration: 1.4,
         ease: 'sine.inOut',
         yoyo: true,
-        repeat: -1,
-        stagger: 0.18
+        repeat: 1,
+        scrollTrigger: { trigger: '.versus', start: 'top 70%', once: true }
+      }
+    );
+
+    /* ── plan cards: sweep class ─────────────────────── */
+    const planCards = gsap.utils.toArray('.plan');
+    if (planCards.length) {
+      ScrollTrigger.create({
+        trigger: '.pricing__grid',
+        start: 'top 80%',
+        once: true,
+        onEnter: () => planCards.forEach((card, index) => {
+          setTimeout(() => card.classList.add('is-sweeping'), index * 160);
+        })
       });
     }
 
-    /* ── 14. FAQ items — soft reveal ─────────────── */
-    const faqItems = gsap.utils.toArray('.faq__item');
-    if (faqItems.length) {
-      gsap.fromTo(faqItems,
-        { opacity: 0, y: 16 },
-        {
-          opacity: 1, y: 0,
-          duration: 0.7,
-          stagger: 0.08,
-          ease: 'power2.out',
-          scrollTrigger: { trigger: '.faq__list', start: 'top 80%', once: true }
-        }
-      );
+    /* ── vision: dots pulsing + lit class ────────────── */
+    gsap.to('.vision__card .dot', {
+      scale: 1.35,
+      opacity: 0.72,
+      duration: 1.1,
+      ease: 'sine.inOut',
+      yoyo: true,
+      repeat: -1,
+      stagger: 0.18
+    });
 
-      faqItems.forEach(item => {
-        item.addEventListener('toggle', () => {
-          const body = item.querySelector('p');
-          if (!body) return;
-          if (item.open) {
-            gsap.fromTo(body,
-              { opacity: 0, y: -8 },
-              { opacity: 1, y: 0, duration: 0.35, ease: 'power2.out' }
-            );
-          }
-        });
+    const visionCards = gsap.utils.toArray('.vision__card');
+    if (visionCards.length) {
+      ScrollTrigger.create({
+        trigger: '.vision__cards',
+        start: 'top 80%',
+        once: true,
+        onEnter: () => visionCards.forEach((card, index) => {
+          setTimeout(() => card.classList.add('is-lit'), index * 120);
+        })
       });
     }
 
-    /* ── 15. Closer — orb breathing + reveal ──────── */
+    /* ── FAQ: animação ao abrir ──────────────────────── */
+    document.querySelectorAll('.faq__item').forEach(item => {
+      item.addEventListener('toggle', () => {
+        const body = item.querySelector('p');
+        if (!body || !item.open) return;
+        gsap.fromTo(body,
+          { opacity: 0, y: -8 },
+          { opacity: 1, y: 0, duration: 0.35, ease: 'power2.out' }
+        );
+      });
+    });
+
+    /* ── closer orb: breathing ───────────────────────── */
     const closerOrb = document.getElementById('closerOrb');
     if (closerOrb) {
-      gsap.fromTo(closerOrb,
-        { scale: 0.8, opacity: 0 },
-        {
-          scale: 1, opacity: 1,
-          duration: 1.4,
-          ease: 'power4.out',
-          scrollTrigger: { trigger: '.closer', start: 'top 70%', once: true },
-          onComplete: () => {
-            gsap.to(closerOrb, {
-              scale: 1.06,
-              duration: 2.8,
-              ease: 'sine.inOut',
-              yoyo: true,
-              repeat: -1
-            });
-          }
+      ScrollTrigger.create({
+        trigger: '.closer',
+        start: 'top 70%',
+        once: true,
+        onEnter: () => {
+          gsap.to(closerOrb, {
+            scale: 1.06,
+            duration: 2.8,
+            ease: 'sine.inOut',
+            yoyo: true,
+            repeat: -1
+          });
         }
-      );
+      });
     }
 
-    /* ── 16. Aurora drift ─────────────────────────── */
+    /* ── aurora drift contínuo ───────────────────────── */
     gsap.to('.aurora__a', { x: '-=60', duration: 18, ease: 'sine.inOut', yoyo: true, repeat: -1 });
     gsap.to('.aurora__b', { x: '+=80', y: '+=40', duration: 22, ease: 'sine.inOut', yoyo: true, repeat: -1 });
 
-    /* ── 17. CTA hover micro ──────────────────────── */
-    const finePointer = window.matchMedia('(pointer: fine)').matches;
-
-    if (finePointer) {
+    /* ── hover: cards + botões ───────────────────────── */
+    if (window.matchMedia('(pointer: fine)').matches) {
       document.querySelectorAll('.plan, .vision__card').forEach(card => {
         card.addEventListener('mousemove', event => {
           const rect = card.getBoundingClientRect();
@@ -519,22 +309,10 @@
           const y = ((event.clientY - rect.top) / rect.height) * 100;
           card.style.setProperty('--spot-x', `${x}%`);
           card.style.setProperty('--spot-y', `${y}%`);
-          gsap.to(card, {
-            y: -5,
-            borderColor: 'rgba(111,227,168,0.32)',
-            duration: 0.35,
-            ease: 'power3.out'
-          });
         });
         card.addEventListener('mouseleave', () => {
           card.style.setProperty('--spot-x', '82%');
           card.style.setProperty('--spot-y', '10%');
-          gsap.to(card, {
-            y: 0,
-            borderColor: '',
-            duration: 0.55,
-            ease: 'power3.out'
-          });
         });
       });
 
@@ -549,42 +327,35 @@
           gsap.to(btn, { x: 0, y: 0, scale: 1, duration: 0.45, ease: 'elastic.out(1, 0.45)' });
         });
       });
-    } else {
-      document.querySelectorAll('.btn--primary').forEach(btn => {
-        btn.addEventListener('mouseenter', () => {
-          gsap.to(btn, { scale: 1.03, duration: 0.3, ease: 'power2.out' });
-        });
-        btn.addEventListener('mouseleave', () => {
-          gsap.to(btn, { scale: 1, duration: 0.4, ease: 'power3.out' });
-        });
-      });
     }
 
-    /* ── refresh ScrollTrigger on font load ───────── */
+    /* ── refresh on font load ────────────────────────── */
     if (document.fonts && document.fonts.ready) {
       document.fonts.ready.then(() => ScrollTrigger.refresh());
     }
   };
 
-  if (reduceMotion) {
-    fallbackReveal();
-  } else {
-    waitForGSAP(animate);
-  }
+  waitForGSAP(animate);
 
-  /* ── chat simulation ─────────────────────────────────── */
+  /* ══════════════════════════════════════════════════
+     CHAT SIMULATION
+     ══════════════════════════════════════════════════ */
   const chatEl = document.getElementById('chat');
   if (chatEl) {
     const script = [
-      { type: 'them',   text: 'oi, dá pra marcar consulta pra essa semana?', delay: 600 },
-      { type: 'typing', delay: 900 },
-      { type: 'me',     text: 'Oi! Claro. Você prefere início ou fim da semana?', delay: 700 },
-      { type: 'them',   text: 'fim, se possível à tarde', delay: 1400 },
-      { type: 'typing', delay: 900 },
-      { type: 'me',     text: 'Tenho quinta 14:30 e sexta 16:00. Qual fica melhor?', delay: 700 },
-      { type: 'them',   text: 'quinta 14:30', delay: 1300 },
-      { type: 'me',     text: 'Agendado ✓ Te mando lembrete um dia antes.', delay: 1100 },
-      { type: 'pause',  delay: 2800 }
+      { type: 'typing-them', delay: 700 },
+      { type: 'them',        text: 'oi, dá pra marcar consulta pra essa semana?', delay: 1700 },
+      { type: 'typing-me',   delay: 1200 },
+      { type: 'me',          text: 'Oi! Claro. Você prefere início ou fim da semana?', delay: 1800 },
+      { type: 'typing-them', delay: 1300 },
+      { type: 'them',        text: 'fim, se possível à tarde', delay: 1500 },
+      { type: 'typing-me',   delay: 1200 },
+      { type: 'me',          text: 'Tenho quinta 14:30 e sexta 16:00. Qual fica melhor?', delay: 1900 },
+      { type: 'typing-them', delay: 1400 },
+      { type: 'them',        text: 'quinta 14:30', delay: 1200 },
+      { type: 'typing-me',   delay: 1300 },
+      { type: 'me',          text: 'Agendado ✓ Te mando lembrete um dia antes.', delay: 1700 },
+      { type: 'pause',       delay: 4500 }
     ];
 
     let timer = null;
@@ -598,9 +369,9 @@
       chatEl.appendChild(li);
     };
 
-    const addTyping = () => {
+    const addTyping = (variant = 'them') => {
       const li = document.createElement('li');
-      li.className = 'chat__typing';
+      li.className = `chat__typing chat__typing--${variant}`;
       li.innerHTML = '<span></span><span></span><span></span>';
       chatEl.appendChild(li);
     };
@@ -617,31 +388,28 @@
       }
       const step = script[i];
       timer = setTimeout(() => {
-        if (step.type === 'them')        { removeTyping(); addBubble('them', step.text); }
-        else if (step.type === 'me')     { removeTyping(); addBubble('me', step.text); }
-        else if (step.type === 'typing') { addTyping(); }
+        if (step.type === 'them')             { removeTyping(); addBubble('them', step.text); }
+        else if (step.type === 'me')          { removeTyping(); addBubble('me', step.text); }
+        else if (step.type === 'typing-them') { removeTyping(); addTyping('them'); }
+        else if (step.type === 'typing-me')   { removeTyping(); addTyping('me'); }
         run(i + 1);
       }, step.delay);
     };
 
-    if (reduceMotion) {
-      script.filter(s => s.type === 'them' || s.type === 'me').forEach(s => addBubble(s.type, s.text));
-    } else {
-      const startIO = new IntersectionObserver((entries) => {
-        entries.forEach(e => {
-          if (e.isIntersecting) {
-            run(0);
-            startIO.disconnect();
-          }
-        });
-      }, { threshold: 0.3 });
-      startIO.observe(chatEl);
-    }
+    const startIO = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          run(0);
+          startIO.disconnect();
+        }
+      });
+    }, { threshold: 0.3 });
+    startIO.observe(chatEl);
 
     document.addEventListener('visibilitychange', () => {
       if (document.hidden && timer) {
         clearTimeout(timer); timer = null;
-      } else if (!document.hidden && !timer && !reduceMotion) {
+      } else if (!document.hidden && !timer) {
         clearChat();
         run(0);
       }
