@@ -1,0 +1,10 @@
+CLAUDE.md
+serve.ps1
+.git/
+.gitignore
+.vercel/
+.chrome-headless/
+.chrome-test-profile/
+screenshots/
+test-screenshots/
+*.log

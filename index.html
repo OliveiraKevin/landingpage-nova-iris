@@ -5,32 +5,38 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>Nova Iris — A recepção que nunca dorme</title>
   <meta name="description" content="A Iris é o agente de IA que vive no WhatsApp da sua clínica. Agenda, confirma, lembra e remarca — 24/7, sem recepcionista." />
+  <link rel="canonical" href="https://novairis.com.br/" />
 
   <meta property="og:title" content="Nova Iris — A recepção que nunca dorme" />
   <meta property="og:description" content="Agente de IA no WhatsApp da sua clínica. Atende, agenda e lembra — 24/7." />
-  <meta property="og:image" content="image.png" />
+  <meta property="og:url" content="https://novairis.com.br/" />
+  <meta property="og:image" content="https://novairis.com.br/iris-realistic-final.jpg" />
+  <meta property="og:image:alt" content="Recepção de clínica à noite com atendimento automatizado no WhatsApp." />
   <meta property="og:type" content="website" />
   <meta property="og:locale" content="pt_BR" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Nova Iris — A recepção que nunca dorme" />
+  <meta name="twitter:description" content="Agente de IA no WhatsApp da sua clínica. Atende, agenda e lembra — 24/7." />
+  <meta name="twitter:image" content="https://novairis.com.br/iris-realistic-final.jpg" />
   <meta name="theme-color" content="#07090A" />
 
-  <link rel="icon" type="image/png" href="image.png" />
+  <link rel="icon" type="image/png" href="iris-mark-256.png" />
 
   <!-- preconnect CDNs -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="preconnect" href="https://unpkg.com" crossorigin />
 
   <!-- preload assets críticos -->
-  <link rel="preload" as="image" href="iris-realistic-final.png" fetchpriority="high" />
-  <link rel="preload" as="image" href="image.png" />
-  <link rel="preload" as="script" href="https://unpkg.com/gsap@3.12.5/dist/gsap.min.js" />
-  <link rel="preload" as="script" href="https://unpkg.com/gsap@3.12.5/dist/ScrollTrigger.min.js" />
+  <link rel="preload" as="image" href="iris-realistic-final.jpg" fetchpriority="high" />
+  <link rel="preload" as="image" href="iris-mark-512.png" />
+  <link rel="preload" as="script" href="vendor/gsap.min.js" />
+  <link rel="preload" as="script" href="vendor/ScrollTrigger.min.js" />
 
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300;400;500&family=Sora:wght@200;300;400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
 
-  <script src="https://unpkg.com/gsap@3.12.5/dist/gsap.min.js" defer></script>
-  <script src="https://unpkg.com/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
+  <script src="vendor/gsap.min.js" defer></script>
+  <script src="vendor/ScrollTrigger.min.js" defer></script>
 </head>
 <body>
 
@@ -43,7 +49,7 @@
 
   <header class="nav" id="nav">
     <a class="nav__brand" href="#top" aria-label="Nova Iris — início">
-      <img src="image.png" alt="" class="nav__mark bg-knock" width="32" height="32" />
+      <img src="iris-mark-256.png" alt="" class="nav__mark bg-knock" width="32" height="32" />
       <span class="nav__word">NOVA IRIS</span>
     </a>
     <nav class="nav__links" aria-label="Seções">
@@ -128,7 +134,7 @@
       </header>
       <div class="solution__grid">
         <div class="solution__visual reveal">
-          <img src="image.png" alt="" class="solution__orb bg-knock" width="420" height="420" loading="lazy" decoding="async" />
+          <img src="iris-mark-512.png" alt="" class="solution__orb bg-knock" width="420" height="420" loading="lazy" decoding="async" />
         </div>
         <div class="solution__copy reveal" data-delay="120">
           <p class="solution__text">
@@ -155,13 +161,13 @@
           <div class="phone">
             <div class="phone__notch" aria-hidden="true"></div>
             <div class="phone__bar">
-              <span class="phone__avatar"><img src="image.png" alt="" class="bg-knock" width="30" height="30" decoding="async" /></span>
+              <span class="phone__avatar"><img src="iris-mark-256.png" alt="" class="bg-knock" width="30" height="30" decoding="async" /></span>
               <div class="phone__who">
                 <strong>Iris</strong>
                 <span>online · digitando…</span>
               </div>
             </div>
-            <ol class="chat" id="chat" aria-live="polite"></ol>
+            <ol class="chat" id="chat" aria-hidden="true"></ol>
             <div class="phone__input" aria-hidden="true">
               <span>Mensagem</span>
               <i></i>
@@ -308,7 +314,7 @@
         <article class="plan reveal">
           <header class="plan__head">
             <h3 class="plan__name">Iris Clínica</h3>
-            <p class="plan__note">Agente de atendimento exclusivo no WhatsApp da sua clínica — disponível para agendar, confirmar e lembrar 24/7.</p>
+            <p class="plan__note">Agente de atendimento no WhatsApp da sua clínica para responder, agendar, confirmar, lembrar e remarcar 24/7.</p>
             <p class="plan__price">
               <span class="plan__currency">R$</span>
               <span class="plan__amount"><em>750</em></span>
@@ -325,7 +331,7 @@
             <li>Lembretes inteligentes para reduzir no-show</li>
             <li>Remarcações sem intervenção humana</li>
             <li>Base de FAQ personalizada</li>
-            <li>Acompanhamento dos ajustes no go-live</li>
+            <li>Go-live assistido e ajustes iniciais</li>
             <li>Suporte humano contínuo</li>
           </ul>
 
@@ -339,51 +345,52 @@
         <article class="plan reveal" data-delay="120">
           <header class="plan__head">
             <h3 class="plan__name">Site Inteligente</h3>
-            <p class="plan__note">Landing page ou site institucional para transformar visitas em conversas no WhatsApp.</p>
+            <p class="plan__note">Implementação de uma landing page ou site inicial para transformar visitas em conversas no WhatsApp.</p>
             <p class="plan__price">
               <span class="plan__currency">R$</span>
-              <span class="plan__amount"><em>2.500</em></span>
+              <span class="plan__amount"><em>1.500</em></span>
               <span class="plan__cycle">setup</span>
             </p>
-            <p class="plan__setup">+ R$ 250/mês de manutenção opcional</p>
+            <p class="plan__setup">+ R$ 250/mês de manutenção opcional · domínio e hospedagem à parte</p>
           </header>
 
           <ul class="plan__list">
-            <li>Landing page ou site institucional enxuto</li>
+            <li>Landing page ou site inicial de página única</li>
             <li>Copy, layout e estrutura de conversão</li>
             <li>Botões para WhatsApp e agendamento</li>
             <li>Versão mobile bem acabada</li>
             <li>SEO básico para presença local</li>
-            <li>Ajustes finais depois da publicação</li>
+            <li>Publicação assistida e ajustes finais</li>
           </ul>
 
           <a class="btn btn--ghost btn--block" href="https://wa.me/5511986272135?text=Oi%20Valentina%2C%20quero%20um%20site%20para%20minha%20cl%C3%ADnica." target="_blank" rel="noopener">
             Quero um site para a clínica
           </a>
 
-          <p class="plan__fine">// SITE INSTITUCIONAL COMPLETO SOB ESCOPO</p>
+          <p class="plan__fine">// IDEAL PARA VALIDAR PRESENÇA DIGITAL RÁPIDA · PÁGINAS EXTRAS SOB ESCOPO</p>
         </article>
 
         <article class="plan plan--featured reveal" data-delay="240">
           <span class="plan__tag">Melhor pacote</span>
           <header class="plan__head">
             <h3 class="plan__name">Iris + Site</h3>
-            <p class="plan__note">A presença digital e o atendimento já nascem conectados no mesmo projeto.</p>
+            <p class="plan__note">Landing page, WhatsApp e atendimento automatizado alinhados desde o primeiro dia.</p>
             <p class="plan__price">
               <span class="plan__currency">R$</span>
-              <span class="plan__amount"><em>1.250</em></span>
+              <span class="plan__amount"><em>1.000</em></span>
               <span class="plan__cycle">/mês</span>
             </p>
-            <p class="plan__setup">+ R$ 2.500 de setup único · implantação conjunta</p>
+            <p class="plan__setup">+ R$ 2.500 de setup único · Iris + implementação do site</p>
           </header>
 
           <ul class="plan__list">
             <li>Iris Clínica completa</li>
-            <li>Landing page ou site institucional inicial</li>
+            <li>Landing page ou site inicial incluso no setup</li>
             <li>Fluxo de captação conectado ao WhatsApp</li>
             <li>Mensagem, agenda e CTA alinhados</li>
             <li>Go-live coordenado em uma implantação</li>
-            <li>Suporte humano contínuo</li>
+            <li>Manutenção do site incluída na mensalidade</li>
+            <li>Suporte humano contínuo para Iris</li>
           </ul>
 
           <a class="btn btn--primary btn--block" href="https://wa.me/5511986272135?text=Oi%20Valentina%2C%20quero%20o%20pacote%20Iris%20%2B%20Site%20para%20minha%20cl%C3%ADnica." target="_blank" rel="noopener">
@@ -440,7 +447,7 @@
         </details>
         <details class="faq__item reveal">
           <summary>Os dados dos pacientes ficam seguros?</summary>
-          <p>Sim. Operamos com critérios LGPD, mensagens criptografadas em trânsito e dados sensíveis tratados com hash. Sem PII em logs.</p>
+          <p>Sim. Tratamos dados com cuidado e boas práticas de segurança. No onboarding alinhamos acessos, escopo e responsabilidades conforme a operação da clínica.</p>
         </details>
         <details class="faq__item reveal">
           <summary>Funciona no meu sistema de agenda?</summary>
@@ -464,7 +471,7 @@
     <!-- ─── 11. CTA FINAL ──────────────────────────────────────── -->
     <section class="closer">
       <div class="closer__inner">
-        <img src="image.png" alt="" class="closer__orb bg-knock reveal" id="closerOrb" width="220" height="220" loading="lazy" decoding="async" />
+        <img src="iris-mark-512.png" alt="" class="closer__orb bg-knock reveal" id="closerOrb" width="220" height="220" loading="lazy" decoding="async" />
         <h2 class="closer__title reveal" data-delay="120">
           <em>Quanto custa o paciente<br />que você não atendeu ontem?</em>
         </h2>
@@ -483,12 +490,12 @@
 
   <footer class="foot">
     <div class="foot__brand">
-      <img src="image.png" alt="" class="bg-knock" width="22" height="22" decoding="async" />
+      <img src="iris-mark-256.png" alt="" class="bg-knock" width="22" height="22" decoding="async" />
       <span>Nova Iris</span>
     </div>
     <ul class="foot__links">
       <li><a href="https://novairis.com.br">novairis.com.br</a></li>
-      <li><a href="mailto:kevin@novairis.com.br">kevin@novairis.com.br</a></li>
+      <li><a href="mailto:contato@novairis.com.br">contato@novairis.com.br</a></li>
       <li><a href="https://wa.me/5511986272135" target="_blank" rel="noopener">WhatsApp</a></li>
     </ul>
     <p class="foot__copy">© 2026 Nova Iris · Automação inteligente para clínicas</p>

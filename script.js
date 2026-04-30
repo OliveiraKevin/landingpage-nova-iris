@@ -14,12 +14,20 @@
   onScrollNav();
 
   const revealEls = document.querySelectorAll('.reveal');
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const isCompactViewport = window.matchMedia('(max-width: 640px)').matches;
+  const saveData = Boolean(navigator.connection && navigator.connection.saveData);
+  const canRunAmbientMotion = !prefersReducedMotion && !isCompactViewport && !saveData;
 
   /* ── fallback caso GSAP não carregue ─────────────────── */
   const fallbackReveal = () => {
+    document.documentElement.classList.add('no-gsap');
+
     const io = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
+          const delay = Number(entry.target.dataset.delay || 0);
+          entry.target.style.transitionDelay = `${delay}ms`;
           entry.target.classList.add('is-in');
           io.unobserve(entry.target);
         }
@@ -29,8 +37,12 @@
   };
 
   /* ── espera GSAP carregar ────────────────────────────── */
-  const waitForGSAP = (cb, tries = 100) => {
-    if (window.gsap && window.ScrollTrigger) return cb();
+  const waitForGSAP = (cb, tries = 300) => {
+    if (window.gsap && window.ScrollTrigger) {
+      document.documentElement.classList.remove('no-gsap');
+      document.documentElement.classList.add('gsap-ready');
+      return cb();
+    }
     if (tries <= 0) return fallbackReveal();
     setTimeout(() => waitForGSAP(cb, tries - 1), 20);
   };
@@ -71,13 +83,15 @@
       .fromTo('.hero-bg', { scale: 1.05, opacity: 0 }, { scale: 1.02, opacity: 0.88, duration: 1.8, ease: 'power4.out' }, 0);
 
     /* ── HERO sheen loop ─────────────────────────────── */
-    gsap.timeline({ repeat: -1, repeatDelay: 2.8, defaults: { ease: 'power2.inOut' } })
-      .fromTo('.hero-sheen',
-        { backgroundPosition: '140% 0', opacity: 0 },
-        { backgroundPosition: '-40% 0', opacity: 1, duration: 2.1 },
-        1.1
-      )
-      .to('.hero-sheen', { opacity: 0, duration: 0.5 }, '>-0.45');
+    if (canRunAmbientMotion) {
+      gsap.timeline({ repeat: -1, repeatDelay: 2.8, defaults: { ease: 'power2.inOut' } })
+        .fromTo('.hero-sheen',
+          { backgroundPosition: '140% 0', opacity: 0 },
+          { backgroundPosition: '-40% 0', opacity: 0.55, duration: 2.4 },
+          1.1
+        )
+        .to('.hero-sheen', { opacity: 0, duration: 0.85 }, '>-0.65');
+    }
 
     /* ── HERO bg parallax ────────────────────────────── */
     const heroBg = document.querySelector('.hero-bg');
@@ -100,25 +114,46 @@
        agrupar elementos que entram juntos no viewport.
        ══════════════════════════════════════════════════ */
     const nonHeroReveals = Array.from(revealEls).filter(el => !el.closest('.hero'));
+    gsap.set(nonHeroReveals, { opacity: 0, y: 32 });
 
-    ScrollTrigger.batch(nonHeroReveals, {
-      interval: 0.1,
-      batchMax: 5,
-      onEnter: batch => {
-        gsap.fromTo(batch,
-          { opacity: 0, y: 32 },
-          {
-            opacity: 1, y: 0,
-            duration: 0.9,
-            stagger: 0.12,
+    if (isCompactViewport) {
+      const mobileRevealIO = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) return;
+          const delay = Number(entry.target.dataset.delay || 0);
+          gsap.to(entry.target, {
+            opacity: 1,
+            y: 0,
+            duration: 0.78,
+            delay: delay / 1000,
             ease: 'power3.out',
-            onComplete: () => batch.forEach(el => el.classList.add('is-in'))
-          }
-        );
-      },
-      start: 'top 86%',
-      once: true
-    });
+            overwrite: 'auto',
+            onComplete: () => entry.target.classList.add('is-in')
+          });
+          mobileRevealIO.unobserve(entry.target);
+        });
+      }, { threshold: 0.08, rootMargin: '0px 0px -6% 0px' });
+      nonHeroReveals.forEach(el => mobileRevealIO.observe(el));
+    } else {
+      ScrollTrigger.batch(nonHeroReveals, {
+        interval: 0.1,
+        batchMax: 5,
+        onEnter: batch => {
+          gsap.fromTo(batch,
+            { opacity: 0, y: 32 },
+            {
+              opacity: 1, y: 0,
+              duration: 0.9,
+              stagger: 0.12,
+              ease: 'power3.out',
+              onComplete: () => batch.forEach(el => el.classList.add('is-in'))
+            }
+          );
+        },
+        start: 'top 86%',
+        once: true
+      });
+    }
 
     /* ── linha decorativa nos section heads ──────────── */
     gsap.utils.toArray('.section-head').forEach(head => {
@@ -151,7 +186,7 @@
     /* ── phone: float idle + tilt no mouse ───────────── */
     const phone = document.querySelector('.phone');
     const phoneFrame = document.querySelector('.demo__phone');
-    if (phone) {
+    if (phone && canRunAmbientMotion) {
       gsap.to(phone, {
         y: -10,
         rotateZ: 0.7,
@@ -243,15 +278,17 @@
     }
 
     /* ── vision: dots pulsing + lit class ────────────── */
-    gsap.to('.vision__card .dot', {
-      scale: 1.35,
-      opacity: 0.72,
-      duration: 1.1,
-      ease: 'sine.inOut',
-      yoyo: true,
-      repeat: -1,
-      stagger: 0.18
-    });
+    if (canRunAmbientMotion) {
+      gsap.to('.vision__card .dot', {
+        scale: 1.35,
+        opacity: 0.72,
+        duration: 1.1,
+        ease: 'sine.inOut',
+        yoyo: true,
+        repeat: -1,
+        stagger: 0.18
+      });
+    }
 
     const visionCards = gsap.utils.toArray('.vision__card');
     if (visionCards.length) {
@@ -279,7 +316,7 @@
 
     /* ── closer orb: breathing ───────────────────────── */
     const closerOrb = document.getElementById('closerOrb');
-    if (closerOrb) {
+    if (closerOrb && canRunAmbientMotion) {
       ScrollTrigger.create({
         trigger: '.closer',
         start: 'top 70%',
@@ -297,8 +334,10 @@
     }
 
     /* ── aurora drift contínuo ───────────────────────── */
-    gsap.to('.aurora__a', { x: '-=60', duration: 18, ease: 'sine.inOut', yoyo: true, repeat: -1 });
-    gsap.to('.aurora__b', { x: '+=80', y: '+=40', duration: 22, ease: 'sine.inOut', yoyo: true, repeat: -1 });
+    if (canRunAmbientMotion) {
+      gsap.to('.aurora__a', { x: '-=60', duration: 18, ease: 'sine.inOut', yoyo: true, repeat: -1 });
+      gsap.to('.aurora__b', { x: '+=80', y: '+=40', duration: 22, ease: 'sine.inOut', yoyo: true, repeat: -1 });
+    }
 
     /* ── hover: cards + botões ───────────────────────── */
     if (window.matchMedia('(pointer: fine)').matches) {
@@ -342,31 +381,61 @@
      ══════════════════════════════════════════════════ */
   const chatEl = document.getElementById('chat');
   if (chatEl) {
-    const script = [
-      { type: 'typing-them', delay: 700 },
-      { type: 'them',        text: 'oi, dá pra marcar consulta pra essa semana?', delay: 1700 },
-      { type: 'typing-me',   delay: 1200 },
-      { type: 'me',          text: 'Oi! Claro. Você prefere início ou fim da semana?', delay: 1800 },
-      { type: 'typing-them', delay: 1300 },
-      { type: 'them',        text: 'fim, se possível à tarde', delay: 1500 },
-      { type: 'typing-me',   delay: 1200 },
-      { type: 'me',          text: 'Tenho quinta 14:30 e sexta 16:00. Qual fica melhor?', delay: 1900 },
-      { type: 'typing-them', delay: 1400 },
-      { type: 'them',        text: 'quinta 14:30', delay: 1200 },
-      { type: 'typing-me',   delay: 1300 },
-      { type: 'me',          text: 'Agendado ✓ Te mando lembrete um dia antes.', delay: 1700 },
-      { type: 'pause',       delay: 4500 }
+    const conversations = [
+      [
+        { type: 'typing-them', delay: 700 },
+        { type: 'them',        text: 'oi, dá pra marcar consulta pra essa semana?', delay: 1700 },
+        { type: 'typing-me',   delay: 1200 },
+        { type: 'me',          text: 'Oi! Claro. Você prefere início ou fim da semana?', delay: 1800 },
+        { type: 'typing-them', delay: 1300 },
+        { type: 'them',        text: 'fim, se possível à tarde', delay: 1500 },
+        { type: 'typing-me',   delay: 1200 },
+        { type: 'me',          text: 'Tenho quinta 14:30 e sexta 16:00. Qual fica melhor?', delay: 1900 },
+        { type: 'typing-them', delay: 1400 },
+        { type: 'them',        text: 'quinta 14:30', delay: 1200 },
+        { type: 'typing-me',   delay: 1300 },
+        { type: 'me',          text: 'Agendado. Te mando lembrete um dia antes.', delay: 1700 },
+        { type: 'pause',       delay: 3600 }
+      ],
+      [
+        { type: 'typing-them', delay: 700 },
+        { type: 'them',        text: 'preciso remarcar a consulta de amanhã', delay: 1600 },
+        { type: 'typing-me',   delay: 1100 },
+        { type: 'me',          text: 'Sem problema. Tenho terça às 10:00 ou quarta às 15:30.', delay: 1900 },
+        { type: 'typing-them', delay: 1200 },
+        { type: 'them',        text: 'quarta 15:30 fica ótimo', delay: 1300 },
+        { type: 'typing-me',   delay: 1200 },
+        { type: 'me',          text: 'Remarcado para quarta às 15:30. A agenda já foi atualizada.', delay: 1900 },
+        { type: 'pause',       delay: 3600 }
+      ],
+      [
+        { type: 'typing-me',   delay: 700 },
+        { type: 'me',          text: 'Oi, Ana. Confirmando sua consulta amanhã às 9:20. Posso confirmar?', delay: 1800 },
+        { type: 'typing-them', delay: 1300 },
+        { type: 'them',        text: 'confirmado, obrigada', delay: 1200 },
+        { type: 'typing-me',   delay: 1100 },
+        { type: 'me',          text: 'Perfeito. Se precisar remarcar, é só me chamar por aqui.', delay: 1700 },
+        { type: 'pause',       delay: 3600 }
+      ]
     ];
 
     let timer = null;
+    let conversationIndex = 0;
 
     const clearChat = () => { chatEl.innerHTML = ''; };
+
+    const scrollChatToBottom = () => {
+      requestAnimationFrame(() => {
+        chatEl.scrollTop = chatEl.scrollHeight;
+      });
+    };
 
     const addBubble = (variant, text) => {
       const li = document.createElement('li');
       li.className = `chat__bubble chat__bubble--${variant}`;
       li.textContent = text;
       chatEl.appendChild(li);
+      scrollChatToBottom();
     };
 
     const addTyping = (variant = 'them') => {
@@ -374,6 +443,7 @@
       li.className = `chat__typing chat__typing--${variant}`;
       li.innerHTML = '<span></span><span></span><span></span>';
       chatEl.appendChild(li);
+      scrollChatToBottom();
     };
 
     const removeTyping = () => {
@@ -382,8 +452,13 @@
     };
 
     const run = (i = 0) => {
+      const script = conversations[conversationIndex];
       if (i >= script.length) {
-        timer = setTimeout(() => { clearChat(); run(0); }, 600);
+        timer = setTimeout(() => {
+          clearChat();
+          conversationIndex = (conversationIndex + 1) % conversations.length;
+          run(0);
+        }, 800);
         return;
       }
       const step = script[i];

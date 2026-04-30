@@ -2,96 +2,146 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Projeto
+## Estado atual
 
-Landing page estática da Nova Iris — empresa de automação de saúde via WhatsApp.
-Produto principal: **Iris** — agente de IA que atende, agenda e remarca pelo WhatsApp da clínica, 24/7.
-Stack: HTML + CSS + JS vanilla. Sem bundler, sem framework.
+Landing page estática da **Nova Iris** para divulgar a Iris, agente de IA para atendimento, agendamento, confirmação, lembrete e remarcação via WhatsApp para clínicas.
 
-## Desenvolvimento
+Stack:
+- HTML, CSS e JavaScript vanilla
+- GSAP 3.12.5 + ScrollTrigger vendorizados localmente em `vendor/`
+- Sem framework, sem npm, sem build step
 
-```bash
-python -m http.server 5500
-# acesse http://localhost:5500
-```
+Domínio público definido:
+- `https://novairis.com.br/`
 
-Não há build step, testes, ou dependências npm.
+Contato público:
+- WhatsApp: `wa.me/5511986272135`
+- E-mail: `contato@novairis.com.br`
 
-## Arquitetura
-
-```
-index.html    — 11 seções (ver estrutura abaixo)
-styles.css    — variáveis no :root, mobile-first, sem preprocessador
-script.js     — GSAP + ScrollTrigger (CDN) + chat sim + nav scroll
-image.png     — logo símbolo da Iris (PNG transparente) · usado em todo o HTML
-image copy.png — versão anterior do logo (fundo preto) · não usado
-```
-
-### Seções do index.html
-
-1. **Hero** — headline + orb 3D + CTAs WhatsApp
-2. **Problema** — 4 friction points da recepção humana
-3. **Solução** — intro da Iris + capacidades em mono
-4. **Demo** — simulação de chat em loop (iPhone mockup CSS)
-5. **Como funciona** — 4 passos: Onboarding · Treinamento · Teste & Ajuste · Go-live
-6. **Resultados** — 4 stats: 24/7 · <3s · 0 · ∞
-7. **Por que a Iris** — tabela comparativa vs alternativas
-8. **Planos** — card único R$750/mês + R$1k setup, sem fidelidade
-9. **Visão de plataforma** — Iris (ao vivo) · Dashboard (em validação) · Sites (roadmap)
-10. **FAQ** — 6 perguntas em accordion `<details>` CSS-only
-11. **CTA final** — closer com headline editorial + botão WhatsApp
-
-## Paleta
+## Arquivos do projeto
 
 ```
---ink:        #07090A   (canvas principal)
---ink-2:      #0F1714   (seções alternadas)
---ink-3:      #151D1A
---moss:       #1B4D3E   (primário)
---glow:       #3D9970   (acento)
---glow-hi:    #6FE3A8   (highlight)
---bone:       #F2EFE8   (texto principal)
---bone-dim:   #A8AEA9   (texto secundário)
+index.html                  — landing completa
+styles.css                  — layout, responsividade, animações CSS e estilos mobile
+script.js                   — GSAP, ScrollTrigger, chat demo e interações
+vendor/gsap.min.js          — GSAP local
+vendor/ScrollTrigger.min.js — ScrollTrigger local
+iris-realistic-final.jpg    — imagem hero otimizada
+iris-mark-512.png           — símbolo Iris para usos grandes
+iris-mark-256.png           — símbolo Iris para favicon/nav/footer/avatar
+robots.txt                  — robots básico
+sitemap.xml                 — sitemap básico com novairis.com.br
+vercel.json                 — headers e cache para deploy na Vercel
+.vercelignore               — remove docs/helpers internos do deploy
+.gitignore                  — ignora artefatos locais
+serve.ps1                   — helper local Windows para servir via Python
+CLAUDE.md                   — documentação operacional do projeto
 ```
 
-## Tipografia
+Arquivos removidos por duplicidade/otimização:
+- `image.png` — fonte original 1024px do símbolo, substituída por `iris-mark-256.png` e `iris-mark-512.png`
+- `iris-realistic-final.png` — fonte original pesada do hero, substituída por `iris-realistic-final.jpg`
 
-- **Instrument Serif** — títulos editoriais, itálico dramático
-- **Sora** 200/300/500/600 — sans corpo e UI (brand font)
-- **JetBrains Mono** — badges de status, eyebrows, labels técnicas
+## Seções da landing
 
-Tipografia fluida via `clamp()`. Breakpoints: 640 / 960 / 1280px.
+1. **Hero** — headline, imagem hero realista e CTAs WhatsApp
+2. **Problema** — quatro dores da recepção humana
+3. **Solução** — apresentação da Iris
+4. **Demo** — mockup de conversa em loop com múltiplos cenários
+5. **Como funciona** — quatro passos de implantação
+6. **Resultados** — cards de impacto
+7. **Comparativo** — Iris vs chatbot tradicional vs recepcionista vs IA genérica
+8. **Planos** — Iris Clínica, Site Inteligente, Iris + Site
+9. **Visão de plataforma** — módulos atuais e próximos
+10. **FAQ** — perguntas frequentes
+11. **CTA final** — fechamento e WhatsApp
 
-## Animações (GSAP)
+## Preços públicos atuais
 
-`script.js` usa GSAP 3.12 + ScrollTrigger via CDN com `defer`. Fallback CSS + IntersectionObserver se CDN falhar.
+- **Iris Clínica**: R$ 750/mês + R$ 1.000 de setup único
+- **Site Inteligente**: R$ 1.500 de implementação para landing/site inicial de página única + R$ 250/mês de manutenção opcional. Domínio e hospedagem à parte.
+- **Iris + Site**: R$ 1.000/mês + R$ 2.500 de setup único. Inclui Iris + implementação do site inicial, com manutenção do site incluída na mensalidade.
 
-Momentos animados:
-- Intro stagger no hero (nav → eyebrow → título → sub → CTAs)
-- Orb: float idle + rotação sutil + parallax no scroll
-- Reveals genéricos: `opacity 0 + y:60 + blur:8px → in`
-- Section heads: scale-in com blur
-- Problem list: slide da direita em cascata
-- Phone: tilt 3D + slide-up
-- Stats: scale-in stagger
-- Versus: rows um a um
-- Plan card: entrada dramática
-- Aurora: drift contínuo
-- `prefers-reduced-motion`: desliga tudo
+Observação comercial:
+- Os preços atuais funcionam como preço de entrada/lançamento.
+- Depois dos primeiros clientes, considerar subir para Iris Clínica em R$ 950/mês + R$ 1.500 setup e Iris + Site em R$ 1.250/mês + R$ 3.000 setup.
 
-## Logo / imagem
+## O que foi feito nesta rodada
 
-`image.png` é PNG transparente usado em todo o HTML com `.bg-knock` (mix-blend-mode: lighten) para eliminar pixels escuros internos contra o canvas dark.
+- WhatsApp consolidado em `5511986272135`
+- E-mail público trocado para `contato@novairis.com.br`
+- Domínio técnico e social ajustado para `novairis.com.br`
+- GSAP e ScrollTrigger vendorizados localmente
+- Dependência do CDN `unpkg.com` removida
+- Imagem hero otimizada para JPG leve
+- Logos reduzidos para versões 256px e 512px
+- PNGs originais pesados removidos da pasta
+- `robots.txt` e `sitemap.xml` adicionados
+- `vercel.json`, `.vercelignore` e `.gitignore` adicionados
+- `serve.ps1` adicionado para teste local
+- Copy dos planos revisada para proteger escopo
+- Mobile revisado para evitar scroll horizontal
+- Chat demo ajustado para fluir e rolar internamente
+- FAQ e CTA final corrigidos no mobile
+- Animações mobile ajustadas para todas as seções via `IntersectionObserver`
+- Logo/orb corrigida para não esticar no mobile
 
-## Contatos
+## Desenvolvimento local
 
-WhatsApp (todos os CTAs): `wa.me/5511986272515?text=Oi Valentina, quero ver a Iris em ação.`
-E-mail: `kevin@novairis.com.br`
-Site: `novairis.com.br`
+Abrir direto o `index.html` funciona para revisão visual.
+
+Para testar como site local:
+
+```powershell
+.\serve.ps1
+```
+
+O script mostra a URL local, normalmente:
+
+```text
+http://127.0.0.1:5500
+```
+
+## Deploy recomendado
+
+Prioridade agora:
+1. Subir o repositório no GitHub.
+2. Conectar o repositório à Vercel.
+3. Configurar o domínio `novairis.com.br`.
+4. Ativar HTTPS.
+5. Validar:
+   - `https://novairis.com.br/`
+   - `https://novairis.com.br/robots.txt`
+   - `https://novairis.com.br/sitemap.xml`
+
+Como o projeto não tem build:
+- Framework preset: `Other`
+- Build command: vazio
+- Output directory: raiz do projeto
+
+Observação:
+- `CLAUDE.md` e `serve.ps1` ficam no GitHub, mas são excluídos do deploy pela `.vercelignore`.
+
+## O que ainda falta
+
+Antes de publicar:
+- Confirmar que todos os arquivos estão no GitHub.
+- Criar deploy na Vercel.
+- Apontar DNS do domínio para a Vercel.
+- Conferir preview social no WhatsApp após publicação.
+
+Depois de publicar:
+- Criar página simples de privacidade.
+- Configurar Google Search Console.
+- Criar `favicon.ico` e `apple-touch-icon.png`.
+- Rodar Lighthouse no domínio real.
+- Opcional: adicionar analytics/pixel quando fizer sentido.
+- Opcional: criar proposta comercial em PDF/Canva.
 
 ## Regras de conteúdo
 
-- Não citar clientes por nome (sem "CEAM Brasil" em público)
-- Não expor stack técnica (FastAPI, Z-API, OpenRouter, Supabase, Wareline)
-- CTA principal sempre WhatsApp — sem formulário
-- Sem depoimentos fictícios
+- Não citar clientes por nome.
+- Não expor stack técnica interna de operação.
+- CTA principal sempre WhatsApp.
+- Sem depoimentos fictícios.
+- Linguagem de segurança deve ser simples e comercial; evitar termos técnicos como PII, logs, hash ou detalhes internos de infraestrutura.

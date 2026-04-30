@@ -1,0 +1,6 @@
+.vercel/
+.chrome-headless/
+.chrome-test-profile/
+screenshots/
+test-screenshots/
+*.log
