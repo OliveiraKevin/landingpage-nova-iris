@@ -1,0 +1,436 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Nova Iris — A recepção que nunca dorme</title>
+  <meta name="description" content="A Iris é o agente de IA que vive no WhatsApp da sua clínica. Agenda, confirma, lembra e remarca — 24/7, sem recepcionista." />
+
+  <meta property="og:title" content="Nova Iris — A recepção que nunca dorme" />
+  <meta property="og:description" content="Agente de IA no WhatsApp da sua clínica. Atende, agenda e lembra — 24/7." />
+  <meta property="og:image" content="image.png" />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="pt_BR" />
+  <meta name="theme-color" content="#07090A" />
+
+  <link rel="icon" type="image/png" href="image.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300;400;500&family=Sora:wght@200;300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
+</head>
+<body>
+
+  <!-- grain + aurora ambiance layers -->
+  <div class="grain" aria-hidden="true"></div>
+  <div class="aurora" aria-hidden="true">
+    <span class="aurora__a"></span>
+    <span class="aurora__b"></span>
+  </div>
+
+  <header class="nav" id="nav">
+    <a class="nav__brand" href="#top" aria-label="Nova Iris — início">
+      <img src="image.png" alt="" class="nav__mark bg-knock" />
+      <span class="nav__word">NOVA IRIS</span>
+    </a>
+    <nav class="nav__links" aria-label="Seções">
+      <a href="#solucao">Iris</a>
+      <a href="#como">Como funciona</a>
+      <a href="#planos">Planos</a>
+    </nav>
+    <a class="nav__cta" href="https://wa.me/5511986272135?text=Oi%20Valentina%2C%20quero%20ver%20a%20Iris%20em%20a%C3%A7%C3%A3o." target="_blank" rel="noopener">
+      Falar com a Iris <span aria-hidden="true">→</span>
+    </a>
+  </header>
+
+  <main id="top">
+
+    <!-- ─── 1. HERO ───────────────────────────────────────────── -->
+    <section class="hero">
+      <div class="hero__copy">
+        <p class="eyebrow reveal" data-delay="0">// Agente de atendimento · WhatsApp</p>
+        <h1 class="hero__title reveal" data-delay="120">
+          Sua recepção atende<br />
+          <em>enquanto você dorme.</em>
+        </h1>
+        <p class="hero__sub reveal" data-delay="280">
+          A <strong>Iris</strong> é o agente de IA que vive no WhatsApp da sua clínica.
+          Agenda, confirma, lembra e remarca — 24/7, sem recepcionista.
+        </p>
+        <div class="hero__ctas reveal" data-delay="440">
+          <a class="btn btn--primary" href="https://wa.me/5511986272135?text=Oi%20Valentina%2C%20quero%20ver%20a%20Iris%20em%20a%C3%A7%C3%A3o." target="_blank" rel="noopener">
+            Ver a Iris em ação
+          </a>
+          <a class="btn btn--ghost" href="#demo">Como funciona <span aria-hidden="true">↓</span></a>
+        </div>
+        <ul class="hero__trust reveal" data-delay="600" aria-label="Diferenciais">
+          <li>Resposta em segundos</li>
+          <li>Sem fila</li>
+          <li>Sem hora de almoço</li>
+          <li>Sem feriado</li>
+        </ul>
+      </div>
+      <div class="hero__visual reveal" data-delay="200">
+        <div class="orb">
+          <img src="image.png" alt="Símbolo Nova Iris" class="orb__img bg-knock" id="heroOrb" />
+        </div>
+        <p class="orb__caption">— Iris ·  v1.0</p>
+      </div>
+    </section>
+
+    <!-- ─── 2. PROBLEMA ───────────────────────────────────────── -->
+    <section class="problem">
+      <header class="section-head reveal">
+        <span class="section-head__kicker">// 01 · O problema</span>
+        <h2 class="section-head__title">
+          O custo invisível de uma <em>recepção humana</em>.
+        </h2>
+      </header>
+      <div class="problem__grid">
+        <p class="problem__lead reveal">
+          <em>"Toda hora não atendida<br />é uma consulta perdida."</em>
+        </p>
+        <ol class="problem__list">
+          <li class="reveal">
+            <span class="problem__num">01</span>
+            <p>WhatsApp ignorado depois das 18h — leads esfriam até a manhã seguinte.</p>
+          </li>
+          <li class="reveal" data-delay="80">
+            <span class="problem__num">02</span>
+            <p>Recepcionista sobrecarregada perde follow-ups e o paciente vai para o concorrente.</p>
+          </li>
+          <li class="reveal" data-delay="160">
+            <span class="problem__num">03</span>
+            <p>Mensagens chegando ao mesmo tempo — quem está na fila desiste em silêncio.</p>
+          </li>
+          <li class="reveal" data-delay="240">
+            <span class="problem__num">04</span>
+            <p>Faltas sem lembrete = no-show alto, agenda furada, faturamento abaixo.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ─── 3. SOLUÇÃO ────────────────────────────────────────── -->
+    <section class="solution" id="solucao">
+      <header class="section-head reveal">
+        <span class="section-head__kicker">// 02 · A solução</span>
+        <h2 class="section-head__title">Conheça a <em>Iris</em>.</h2>
+      </header>
+      <div class="solution__grid">
+        <div class="solution__visual reveal">
+          <img src="image.png" alt="" class="solution__orb bg-knock" loading="lazy" />
+        </div>
+        <div class="solution__copy reveal" data-delay="120">
+          <p class="solution__text">
+            Iris é uma camada de inteligência sobre o WhatsApp da sua clínica.
+            Não é chatbot — é uma recepcionista digital que entende contexto,
+            consulta sua agenda real e <em>nunca perde o tom</em>.
+          </p>
+          <p class="solution__caps">
+            Agenda · Confirmação · Lembrete · Remarcação · Dúvidas
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── 4. DEMO AO VIVO ───────────────────────────────────── -->
+    <section class="demo" id="demo">
+      <header class="section-head reveal">
+        <span class="section-head__kicker">// 03 · Demonstração</span>
+        <h2 class="section-head__title">Veja a Iris <em>conversando</em>.</h2>
+      </header>
+
+      <div class="demo__grid">
+        <div class="demo__phone reveal" aria-label="Simulação de conversa">
+          <div class="phone">
+            <div class="phone__notch" aria-hidden="true"></div>
+            <div class="phone__bar">
+              <span class="phone__avatar"><img src="image.png" alt="" class="bg-knock" /></span>
+              <div class="phone__who">
+                <strong>Iris</strong>
+                <span>online · digitando…</span>
+              </div>
+            </div>
+            <ol class="chat" id="chat" aria-live="polite"></ol>
+            <div class="phone__input" aria-hidden="true">
+              <span>Mensagem</span>
+              <i></i>
+            </div>
+          </div>
+        </div>
+
+        <ul class="demo__callouts">
+          <li class="reveal" data-delay="80">
+            <span class="demo__line" aria-hidden="true"></span>
+            <em>"Lê sua agenda em tempo real."</em>
+            <p>Sem planilha paralela. Sem agenda dupla.</p>
+          </li>
+          <li class="reveal" data-delay="160">
+            <span class="demo__line" aria-hidden="true"></span>
+            <em>"Tom natural, sem cara de bot."</em>
+            <p>Treinada com a voz da sua clínica.</p>
+          </li>
+          <li class="reveal" data-delay="240">
+            <span class="demo__line" aria-hidden="true"></span>
+            <em>"Confirma, lembra e remarca sozinha."</em>
+            <p>Você só vê o resultado: agenda cheia.</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ─── 5. COMO FUNCIONA ──────────────────────────────────── -->
+    <section class="how" id="como">
+      <header class="section-head reveal">
+        <span class="section-head__kicker">// 04 · Implementação</span>
+        <h2 class="section-head__title">
+          Em <em>quatro passos</em>, a Iris está atendendo.
+        </h2>
+      </header>
+      <ol class="how__grid">
+        <li class="how__step reveal">
+          <span class="how__num"><em>01.</em></span>
+          <h3>Onboarding</h3>
+          <p>Mapeamos médicos, regras, fluxos e a base de FAQ da clínica.</p>
+        </li>
+        <li class="how__step reveal" data-delay="80">
+          <span class="how__num"><em>02.</em></span>
+          <h3>Treinamento</h3>
+          <p>A Iris aprende o tom da sua marca e os processos internos.</p>
+        </li>
+        <li class="how__step reveal" data-delay="160">
+          <span class="how__num"><em>03.</em></span>
+          <h3>Teste & Ajuste</h3>
+          <p>Rodada controlada, refinamento de respostas e calibragem fina.</p>
+        </li>
+        <li class="how__step reveal" data-delay="240">
+          <span class="how__num"><em>04.</em></span>
+          <h3>Go-live</h3>
+          <p>Número conectado, monitoramento ativo, suporte contínuo.</p>
+        </li>
+      </ol>
+    </section>
+
+    <!-- ─── 6. RESULTADOS ─────────────────────────────────────── -->
+    <section class="stats">
+      <header class="section-head reveal">
+        <span class="section-head__kicker">// 05 · O que muda</span>
+        <h2 class="section-head__title">Uma recepção que <em>não falha</em>.</h2>
+      </header>
+      <div class="stats__grid">
+        <article class="stat stat--a reveal">
+          <span class="stat__num"><em>24/7</em></span>
+          <span class="stat__label">Atendimento sem pausa</span>
+        </article>
+        <article class="stat stat--b reveal" data-delay="100">
+          <span class="stat__num"><em>&lt;3s</em></span>
+          <span class="stat__label">Tempo médio de primeira resposta</span>
+        </article>
+        <article class="stat stat--c reveal" data-delay="200">
+          <span class="stat__num"><em>0</em></span>
+          <span class="stat__label">Mensagens perdidas no fim de semana</span>
+        </article>
+        <article class="stat stat--d reveal" data-delay="300">
+          <span class="stat__num"><em>∞</em></span>
+          <span class="stat__label">Pacientes em paralelo, sem fila</span>
+        </article>
+      </div>
+    </section>
+
+    <!-- ─── 7. POR QUE A IRIS ─────────────────────────────────── -->
+    <section class="versus">
+      <header class="section-head reveal">
+        <span class="section-head__kicker">// 06 · Comparativo</span>
+        <h2 class="section-head__title">
+          Por que <em>Iris</em>, e não outra coisa.
+        </h2>
+      </header>
+
+      <div class="versus__wrap reveal">
+        <table class="versus__table">
+          <thead>
+            <tr>
+              <th scope="col"></th>
+              <th scope="col" class="is-iris">Iris</th>
+              <th scope="col">Chatbot tradicional</th>
+              <th scope="col">Recepcionista humana</th>
+              <th scope="col">IA genérica</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">Atende 24/7</th>
+              <td class="is-iris">●</td><td>●</td><td>—</td><td>●</td>
+            </tr>
+            <tr>
+              <th scope="row">Integra agenda real</th>
+              <td class="is-iris">●</td><td>—</td><td>●</td><td>—</td>
+            </tr>
+            <tr>
+              <th scope="row">Tom natural</th>
+              <td class="is-iris">●</td><td>—</td><td>●</td><td>—</td>
+            </tr>
+            <tr>
+              <th scope="row">Escala sem custo extra</th>
+              <td class="is-iris">●</td><td>●</td><td>—</td><td>●</td>
+            </tr>
+            <tr>
+              <th scope="row">Lembra e remarca sozinha</th>
+              <td class="is-iris">●</td><td>—</td><td>—</td><td>—</td>
+            </tr>
+            <tr>
+              <th scope="row">Mantém histórico do paciente</th>
+              <td class="is-iris">●</td><td>—</td><td>●</td><td>—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ─── 8. PLANOS ─────────────────────────────────────────── -->
+    <section class="pricing" id="planos">
+      <header class="section-head reveal">
+        <span class="section-head__kicker">// 07 · Planos</span>
+        <h2 class="section-head__title">Um plano. <em>Sem letra miúda.</em></h2>
+      </header>
+
+      <article class="plan reveal">
+        <header class="plan__head">
+          <h3 class="plan__name">Iris Clínica</h3>
+          <p class="plan__price">
+            <span class="plan__currency">R$</span>
+            <span class="plan__amount"><em>750</em></span>
+            <span class="plan__cycle">/mês</span>
+          </p>
+          <p class="plan__setup">+ R$ 1.000 de setup único · sem fidelidade</p>
+        </header>
+
+        <ul class="plan__list">
+          <li>Agente exclusivo treinado com o tom da sua clínica</li>
+          <li>Atendimento 24/7 no WhatsApp oficial</li>
+          <li>Integração com a sua agenda real</li>
+          <li>Confirmação automática de consultas</li>
+          <li>Lembretes inteligentes para reduzir no-show</li>
+          <li>Remarcações sem intervenção humana</li>
+          <li>Base de FAQ personalizada</li>
+          <li>Painel de acompanhamento e relatórios</li>
+          <li>Suporte humano contínuo</li>
+        </ul>
+
+        <a class="btn btn--primary btn--block" href="https://wa.me/5511986272135?text=Oi%20Valentina%2C%20quero%20ver%20a%20Iris%20em%20a%C3%A7%C3%A3o." target="_blank" rel="noopener">
+          Quero a Iris na minha clínica
+        </a>
+
+        <blockquote class="plan__pull">
+          <em>"Uma única consulta recuperada por mês já paga a Iris.<br />O resto é lucro."</em>
+        </blockquote>
+        <p class="plan__fine">// SEM FIDELIDADE · CANCELE QUANDO QUISER · GO-LIVE EM ATÉ 2 SEMANAS</p>
+      </article>
+    </section>
+
+    <!-- ─── 9. VISÃO DE PLATAFORMA ────────────────────────────── -->
+    <section class="vision">
+      <header class="section-head reveal">
+        <span class="section-head__kicker">// 08 · Visão de plataforma</span>
+        <h2 class="section-head__title">A Iris é <em>só o começo</em>.</h2>
+      </header>
+      <p class="vision__lead reveal">
+        A Iris é o primeiro produto de uma plataforma de automação para clínicas.
+      </p>
+      <ul class="vision__cards">
+        <li class="vision__card vision__card--live reveal">
+          <span class="dot dot--live" aria-hidden="true"></span>
+          <h3>Iris</h3>
+          <p>Agente de atendimento no WhatsApp.</p>
+          <span class="vision__status">Ao vivo</span>
+        </li>
+        <li class="vision__card vision__card--soon reveal" data-delay="80">
+          <span class="dot dot--soon" aria-hidden="true"></span>
+          <h3>Dashboard Financeiro</h3>
+          <p>Receitas, despesas, inadimplência e projeções.</p>
+          <span class="vision__status">Em validação</span>
+        </li>
+        <li class="vision__card vision__card--next reveal" data-delay="160">
+          <span class="dot dot--next" aria-hidden="true"></span>
+          <h3>Sites Inteligentes</h3>
+          <p>Site institucional com agendamento integrado.</p>
+          <span class="vision__status">Roadmap</span>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ─── 10. FAQ ────────────────────────────────────────────── -->
+    <section class="faq">
+      <header class="section-head reveal">
+        <span class="section-head__kicker">// 09 · Perguntas frequentes</span>
+        <h2 class="section-head__title">Antes de você <em>perguntar</em>.</h2>
+      </header>
+
+      <div class="faq__list">
+        <details class="faq__item reveal">
+          <summary>E se a Iris não souber responder?</summary>
+          <p>Ela escala para a equipe humana automaticamente, mantendo todo o contexto da conversa. O paciente nunca fica no vazio.</p>
+        </details>
+        <details class="faq__item reveal">
+          <summary>Os dados dos pacientes ficam seguros?</summary>
+          <p>Sim. Operamos com critérios LGPD, mensagens criptografadas em trânsito e dados sensíveis tratados com hash. Sem PII em logs.</p>
+        </details>
+        <details class="faq__item reveal">
+          <summary>Funciona no meu sistema de agenda?</summary>
+          <p>A Iris se conecta a sistemas de agenda comuns no mercado clínico. No onboarding mapeamos a sua e validamos a integração antes do go-live.</p>
+        </details>
+        <details class="faq__item reveal">
+          <summary>Quanto tempo até o go-live?</summary>
+          <p>Em média duas semanas. Onboarding na primeira, treinamento e teste na segunda — go-live ao final.</p>
+        </details>
+        <details class="faq__item reveal">
+          <summary>Posso cancelar quando quiser?</summary>
+          <p>Sim. Sem fidelidade, sem multa. Cancela com 30 dias de aviso prévio.</p>
+        </details>
+        <details class="faq__item reveal">
+          <summary>E se eu já tiver recepcionista?</summary>
+          <p>Melhor ainda. A Iris assume o turno noturno, fins de semana e os picos de mensagens — sua recepcionista para de afogar e volta a ter tempo para o paciente que está na clínica.</p>
+        </details>
+      </div>
+    </section>
+
+    <!-- ─── 11. CTA FINAL ──────────────────────────────────────── -->
+    <section class="closer">
+      <div class="closer__inner">
+        <img src="image.png" alt="" class="closer__orb bg-knock reveal" id="closerOrb" />
+        <h2 class="closer__title reveal" data-delay="120">
+          <em>Quanto custa o paciente<br />que você não atendeu ontem?</em>
+        </h2>
+        <p class="closer__sub reveal" data-delay="240">
+          Conversa de 15 minutos. Sem compromisso. Direto no WhatsApp.
+        </p>
+        <a class="btn btn--primary btn--xl reveal" data-delay="360" href="https://wa.me/5511986272135?text=Oi%20Valentina%2C%20quero%20ver%20a%20Iris%20em%20a%C3%A7%C3%A3o." target="_blank" rel="noopener">
+          Fale com nossa consultora <span aria-hidden="true">→</span>
+        </a>
+        <p class="closer__sign reveal" data-delay="480">
+          <span>Equipe Nova Iris</span> · Atendimento humano
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <div class="foot__brand">
+      <img src="image.png" alt="" class="bg-knock" />
+      <span>Nova Iris</span>
+    </div>
+    <ul class="foot__links">
+      <li><a href="https://novairis.com.br">novairis.com.br</a></li>
+      <li><a href="mailto:kevin@novairis.com.br">kevin@novairis.com.br</a></li>
+      <li><a href="https://wa.me/5511986272135" target="_blank" rel="noopener">WhatsApp</a></li>
+    </ul>
+    <p class="foot__copy">© 2026 Nova Iris · Automação inteligente para clínicas</p>
+  </footer>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
