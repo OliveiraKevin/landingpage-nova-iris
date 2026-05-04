@@ -1,5 +1,5 @@
 /* Nova Iris — landing interactions
-   GSAP + ScrollTrigger via CDN. Fallback CSS+IO se GSAP falhar. */
+   GSAP + ScrollTrigger locais em telas amplas. Fallback CSS+IO no mobile. */
 
 (() => {
   'use strict';
@@ -17,6 +17,7 @@
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const isCompactViewport = window.matchMedia('(max-width: 640px)').matches;
   const saveData = Boolean(navigator.connection && navigator.connection.saveData);
+  const shouldUseGSAP = !prefersReducedMotion && !window.matchMedia('(max-width: 767px)').matches && !saveData;
   const canRunAmbientMotion = !prefersReducedMotion && !isCompactViewport && !saveData;
 
   /* ── fallback caso GSAP não carregue ─────────────────── */
@@ -374,7 +375,11 @@
     }
   };
 
-  waitForGSAP(animate);
+  if (shouldUseGSAP) {
+    waitForGSAP(animate);
+  } else {
+    fallbackReveal();
+  }
 
   /* ══════════════════════════════════════════════════
      CHAT SIMULATION

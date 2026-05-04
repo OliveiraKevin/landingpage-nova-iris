@@ -30,14 +30,26 @@
 
   <!-- preload assets críticos -->
   <link rel="preload" as="image" href="iris-realistic-final.jpg" fetchpriority="high" />
-  <link rel="preload" as="script" href="vendor/gsap.min.js" />
-  <link rel="preload" as="script" href="vendor/ScrollTrigger.min.js" />
 
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300;400;500&family=Sora:wght@200;300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300;400;500&family=Sora:wght@300;400;500;600;700&display=swap" />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300;400;500&family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300;400;500&family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet" /></noscript>
   <link rel="stylesheet" href="styles.css" />
 
-  <script src="vendor/gsap.min.js" defer></script>
-  <script src="vendor/ScrollTrigger.min.js" defer></script>
+  <script>
+    (() => {
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const compactViewport = window.matchMedia('(max-width: 767px)').matches;
+      const saveData = Boolean(navigator.connection && navigator.connection.saveData);
+      if (reduceMotion || compactViewport || saveData) return;
+      ['vendor/gsap.min.js', 'vendor/ScrollTrigger.min.js'].forEach((src) => {
+        const script = document.createElement('script');
+        script.src = src;
+        script.async = false;
+        document.head.appendChild(script);
+      });
+    })();
+  </script>
 </head>
 <body>
 

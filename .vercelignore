@@ -5,6 +5,8 @@ serve.ps1
 .vercel/
 .chrome-headless/
 .chrome-test-profile/
+.chrome-temp/
 screenshots/
 test-screenshots/
 *.log
+lighthouse-*.json
