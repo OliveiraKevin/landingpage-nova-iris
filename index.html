@@ -20,7 +20,9 @@
   <meta name="twitter:image" content="https://novairis.com.br/iris-realistic-final.jpg" />
   <meta name="theme-color" content="#07090A" />
 
-  <link rel="icon" type="image/png" href="iris-mark-256.png" />
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" href="/iris-mark-256.png" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
   <!-- preconnect CDNs -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -28,7 +30,6 @@
 
   <!-- preload assets críticos -->
   <link rel="preload" as="image" href="iris-realistic-final.jpg" fetchpriority="high" />
-  <link rel="preload" as="image" href="iris-mark-512.png" />
   <link rel="preload" as="script" href="vendor/gsap.min.js" />
   <link rel="preload" as="script" href="vendor/ScrollTrigger.min.js" />
 
@@ -134,7 +135,7 @@
       </header>
       <div class="solution__grid">
         <div class="solution__visual reveal">
-          <img src="iris-mark-512.png" alt="" class="solution__orb bg-knock" width="420" height="420" loading="lazy" decoding="async" />
+          <img src="iris-mark-512.png" srcset="iris-mark-256.png 256w, iris-mark-512.png 512w" sizes="(max-width: 640px) 240px, 420px" alt="" class="solution__orb bg-knock" width="420" height="420" loading="lazy" decoding="async" />
         </div>
         <div class="solution__copy reveal" data-delay="120">
           <p class="solution__text">
@@ -471,7 +472,7 @@
     <!-- ─── 11. CTA FINAL ──────────────────────────────────────── -->
     <section class="closer">
       <div class="closer__inner">
-        <img src="iris-mark-512.png" alt="" class="closer__orb bg-knock reveal" id="closerOrb" width="220" height="220" loading="lazy" decoding="async" />
+        <img src="iris-mark-256.png" srcset="iris-mark-256.png 256w, iris-mark-512.png 512w" sizes="220px" alt="" class="closer__orb bg-knock reveal" id="closerOrb" width="220" height="220" loading="lazy" decoding="async" />
         <h2 class="closer__title reveal" data-delay="120">
           <em>Quanto custa o paciente<br />que você não atendeu ontem?</em>
         </h2>
@@ -497,6 +498,7 @@
       <li><a href="https://novairis.com.br">novairis.com.br</a></li>
       <li><a href="mailto:contato@novairis.com.br">contato@novairis.com.br</a></li>
       <li><a href="https://wa.me/5511986272135" target="_blank" rel="noopener">WhatsApp</a></li>
+      <li><a href="/privacidade">Privacidade</a></li>
     </ul>
     <p class="foot__copy">© 2026 Nova Iris · Automação inteligente para clínicas</p>
   </footer>

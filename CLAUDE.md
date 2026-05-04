@@ -29,6 +29,9 @@ vendor/ScrollTrigger.min.js — ScrollTrigger local
 iris-realistic-final.jpg    — imagem hero otimizada
 iris-mark-512.png           — símbolo Iris para usos grandes
 iris-mark-256.png           — símbolo Iris para favicon/nav/footer/avatar
+favicon.ico                 — favicon principal
+apple-touch-icon.png        — ícone para iOS
+privacidade.html            — política de privacidade simples
 robots.txt                  — robots básico
 sitemap.xml                 — sitemap básico com novairis.com.br
 vercel.json                 — headers e cache para deploy na Vercel
@@ -77,6 +80,8 @@ Observação comercial:
 - Logos reduzidos para versões 256px e 512px
 - PNGs originais pesados removidos da pasta
 - `robots.txt` e `sitemap.xml` adicionados
+- Página `privacidade.html` criada e adicionada ao sitemap
+- `favicon.ico` e `apple-touch-icon.png` criados a partir da marca Iris
 - `vercel.json`, `.vercelignore` e `.gitignore` adicionados
 - `serve.ps1` adicionado para teste local
 - Copy dos planos revisada para proteger escopo
@@ -102,17 +107,15 @@ O script mostra a URL local, normalmente:
 http://127.0.0.1:5500
 ```
 
-## Deploy recomendado
+## Deploy
 
-Prioridade agora:
-1. Subir o repositório no GitHub.
-2. Conectar o repositório à Vercel.
-3. Configurar o domínio `novairis.com.br`.
-4. Ativar HTTPS.
-5. Validar:
-   - `https://novairis.com.br/`
-   - `https://novairis.com.br/robots.txt`
-   - `https://novairis.com.br/sitemap.xml`
+Projeto vinculado à Vercel:
+- Project ID: `prj_f4wfCJFaB2I24JeeXUheGodZZmld`
+- Team ID: `team_9BlQ8CRVhyIqnWEJAjsBKziI`
+- Produção publicada em 04/05/2026
+- URL direta validada: `https://landingpage-nova-iris-cgaiw8wk5-kevins-projects-e5da7367.vercel.app/`
+- Alias de produção criado: `https://novairis.com.br`
+- Alias `www`: `https://www.novairis.com.br`
 
 Como o projeto não tem build:
 - Framework preset: `Other`
@@ -124,17 +127,19 @@ Observação:
 
 ## O que ainda falta
 
-Antes de publicar:
-- Confirmar que todos os arquivos estão no GitHub.
-- Criar deploy na Vercel.
-- Apontar DNS do domínio para a Vercel.
-- Conferir preview social no WhatsApp após publicação.
+DNS:
+- Remover o A record antigo `novairis.com.br -> 69.6.248.156`.
+- Manter o A record `novairis.com.br -> 76.76.21.21`.
+- Manter o CNAME `www -> cname.vercel-dns.com`.
+- Aguardar propagação do DNS/HTTPS e validar o domínio real.
+
+Repositório:
+- Commitar e enviar para o GitHub os arquivos novos/alterados desta rodada, se a integração Git for usada para deploys futuros.
 
 Depois de publicar:
-- Criar página simples de privacidade.
 - Configurar Google Search Console.
-- Criar `favicon.ico` e `apple-touch-icon.png`.
 - Rodar Lighthouse no domínio real.
+- Conferir preview social no WhatsApp após DNS estar correto.
 - Opcional: adicionar analytics/pixel quando fizer sentido.
 - Opcional: criar proposta comercial em PDF/Canva.
 

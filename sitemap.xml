@@ -4,4 +4,8 @@
     <loc>https://novairis.com.br/</loc>
     <priority>1.0</priority>
   </url>
+  <url>
+    <loc>https://novairis.com.br/privacidade</loc>
+    <priority>0.3</priority>
+  </url>
 </urlset>
