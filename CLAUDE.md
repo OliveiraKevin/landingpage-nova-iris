@@ -9,14 +9,24 @@ Landing page estática da **Nova Iris** para divulgar a Iris, agente de IA para 
 Stack:
 - HTML, CSS e JavaScript vanilla
 - GSAP 3.12.5 + ScrollTrigger vendorizados localmente em `vendor/`
+- GSAP/ScrollTrigger carregam apenas em telas amplas; mobile usa fallback leve com `IntersectionObserver`
 - Sem framework, sem npm, sem build step
 
 Domínio público definido:
 - `https://novairis.com.br/`
+- `https://www.novairis.com.br/` também funciona
 
 Contato público:
 - WhatsApp: `wa.me/5511986272135`
 - E-mail: `contato@novairis.com.br`
+
+Status público:
+- Site publicado na Vercel
+- DNS e SSL validados
+- Google Search Console verificado
+- `sitemap.xml` enviado no Search Console
+- Preview social do WhatsApp conferido
+- `robots.txt`, `sitemap.xml` e `/privacidade` respondendo `200`
 
 ## Arquivos do projeto
 
@@ -75,7 +85,9 @@ Observação comercial:
 - E-mail público trocado para `contato@novairis.com.br`
 - Domínio técnico e social ajustado para `novairis.com.br`
 - GSAP e ScrollTrigger vendorizados localmente
+- GSAP e ScrollTrigger condicionados para não carregar em mobile/economia de dados/redução de movimento
 - Dependência do CDN `unpkg.com` removida
+- Fontes Google configuradas com carregamento não bloqueante
 - Imagem hero otimizada para JPG leve
 - Logos reduzidos para versões 256px e 512px
 - PNGs originais pesados removidos da pasta
@@ -90,6 +102,32 @@ Observação comercial:
 - FAQ e CTA final corrigidos no mobile
 - Animações mobile ajustadas para todas as seções via `IntersectionObserver`
 - Logo/orb corrigida para não esticar no mobile
+- Contraste dos textos pequenos ajustado
+- `.chrome-temp/` e `lighthouse-*.json` ignorados para evitar deploy de artefatos de auditoria
+
+## Validação atual
+
+Última validação técnica:
+- `https://novairis.com.br/` -> `200`
+- `https://novairis.com.br/privacidade` -> `200`
+- `https://novairis.com.br/robots.txt` -> `200`
+- `https://novairis.com.br/sitemap.xml` -> `200`
+- `https://www.novairis.com.br/` -> `200`
+
+DNS esperado:
+- `novairis.com.br` -> A `76.76.21.21`
+- `www.novairis.com.br` -> CNAME `cname.vercel-dns.com`
+
+Lighthouse após otimização:
+- Performance: 75
+- Accessibility: 100
+- Best Practices: 100
+- SEO: 100
+- FCP: 2.3s
+- LCP: 2.8s
+- TBT: 640ms
+- CLS: 0.007
+- Speed Index: 3.6s
 
 ## Desenvolvimento local
 
@@ -113,7 +151,7 @@ Projeto vinculado à Vercel:
 - Project ID: `prj_f4wfCJFaB2I24JeeXUheGodZZmld`
 - Team ID: `team_9BlQ8CRVhyIqnWEJAjsBKziI`
 - Produção publicada em 04/05/2026
-- URL direta validada: `https://landingpage-nova-iris-cgaiw8wk5-kevins-projects-e5da7367.vercel.app/`
+- Última URL direta de produção conhecida: `https://landingpage-nova-iris-bjkkf5hiu-kevins-projects-e5da7367.vercel.app/`
 - Alias de produção criado: `https://novairis.com.br`
 - Alias `www`: `https://www.novairis.com.br`
 
@@ -127,21 +165,14 @@ Observação:
 
 ## O que ainda falta
 
-DNS:
-- Remover o A record antigo `novairis.com.br -> 69.6.248.156`.
-- Manter o A record `novairis.com.br -> 76.76.21.21`.
-- Manter o CNAME `www -> cname.vercel-dns.com`.
-- Aguardar propagação do DNS/HTTPS e validar o domínio real.
+Não há pendência crítica conhecida.
 
-Repositório:
-- Commitar e enviar para o GitHub os arquivos novos/alterados desta rodada, se a integração Git for usada para deploys futuros.
-
-Depois de publicar:
-- Configurar Google Search Console.
-- Rodar Lighthouse no domínio real.
-- Conferir preview social no WhatsApp após DNS estar correto.
-- Opcional: adicionar analytics/pixel quando fizer sentido.
-- Opcional: criar proposta comercial em PDF/Canva.
+Pendências opcionais:
+- Acompanhar indexação e cobertura no Google Search Console.
+- Adicionar analytics/pixel quando começar divulgação paga ou tráfego recorrente.
+- Criar versões WebP/AVIF dos assets para melhorar performance.
+- Adicionar pipeline de minificação CSS/JS se o projeto crescer.
+- Avaliar redirecionamento canônico de `www` para domínio raiz, se quiser evitar duplicidade total.
 
 ## Regras de conteúdo
 
